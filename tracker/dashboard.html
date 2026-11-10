@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokémon card tracker</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f4f3ef; --surface:#fcfcfb; --raise:#ffffff; --line:#e3e2dc; --line-soft:#eeede8;
+  --text:#0b0b0b; --text-2:#52514e; --text-3:#85847d;
+  --up:#2a78d6; --down:#e34948; --series:#2a78d6;
+  --crit:#d03b3b; --warn:#fab219; --chip:#eeede8; --focus:#2a78d6;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    color-scheme:dark;
+    --page:#111110; --surface:#1a1a19; --raise:#222220; --line:#34342f; --line-soft:#2a2a27;
+    --text:#f0efec; --text-2:#c3c2b7; --text-3:#8f8e86;
+    --up:#3987e5; --down:#e66767; --series:#3987e5;
+    --crit:#e66767; --warn:#fab219; --chip:#2c2c29; --focus:#3987e5;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);
+  font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1320px;margin:0 auto;padding:28px 20px 60px}
+header h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+header p{margin:0;color:var(--text-2)}
+.note{margin:14px 0 0;padding:10px 14px;border:1px solid var(--line);border-left:3px solid var(--warn);
+  background:var(--surface);border-radius:6px;color:var(--text-2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:22px 0}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tile .k{color:var(--text-2);font-size:12px}
+.tile .v{font-size:26px;font-weight:650;letter-spacing:-.02em;margin-top:2px;font-variant-numeric:tabular-nums}
+.tile .s{color:var(--text-3);font-size:12px;margin-top:2px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.bar input,.bar select{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--line);
+  border-radius:7px;padding:7px 10px;min-height:34px}
+.bar input[type=search]{flex:1 1 220px;min-width:160px}
+.bar input[type=number]{width:96px}
+.bar label{display:flex;align-items:center;gap:6px;color:var(--text-2)}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 0 14px;overflow-x:auto}
+.tabs button{font:inherit;background:none;border:0;border-bottom:2px solid transparent;color:var(--text-2);
+  padding:9px 14px;cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--text);font-weight:600}
+.tabs button .c{color:var(--text-3);font-weight:400;margin-left:4px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,th:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1040px}
+th,td{padding:9px 12px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line-soft)}
+tr:last-child td{border-bottom:0}
+th{font-size:12px;font-weight:600;color:var(--text-2);white-space:nowrap;background:var(--surface);
+  position:sticky;top:0;user-select:none}
+th[data-k]{cursor:pointer}
+th[data-k]:hover{color:var(--text)}
+th .ar{color:var(--text-3);margin-left:3px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.name{font-weight:600}
+.name a{color:inherit;text-decoration:none}
+.name a:hover{text-decoration:underline}
+.sub{color:var(--text-3);font-size:12px}
+.d{white-space:nowrap}
+.d i{font-style:normal;font-size:10px;margin-right:3px}
+.d.up i{color:var(--up)} .d.down i{color:var(--down)}
+.muted{color:var(--text-3)}
+.sev{display:inline-flex;align-items:center;gap:5px;font-weight:600;white-space:nowrap}
+.sev i{font-style:normal;font-size:11px}
+.sev.high i{color:var(--crit)} .sev.medium i{color:var(--warn)} .sev.watch i{color:var(--text-3)}
+.new{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:0 6px;margin-left:6px;color:var(--text-2)}
+.chips{display:flex;flex-wrap:wrap;gap:4px;max-width:215px}
+.chip{background:var(--chip);border-radius:5px;padding:1px 7px;font-size:12px;color:var(--text-2);white-space:nowrap}
+.chip.why{color:var(--text);font-weight:600}
+.links{display:grid;grid-template-columns:auto auto;gap:3px 12px;font-size:12px;white-space:nowrap;justify-content:start}
+.links a{color:var(--text-2)}
+td.card{min-width:200px}
+.spark{display:block;cursor:crosshair}
+.empty{padding:36px 20px;text-align:center;color:var(--text-2)}
+.more{display:block;width:100%;padding:11px;font:inherit;border:0;border-top:1px solid var(--line-soft);
+  background:var(--surface);color:var(--text-2);cursor:pointer}
+.more:hover{color:var(--text)}
+#tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);padding:5px 8px;border-radius:6px;
+  font-size:12px;white-space:nowrap;display:none;z-index:10;font-variant-numeric:tabular-nums}
+.how{padding:18px 22px;max-width:820px}
+.how h3{margin:18px 0 6px;font-size:15px}
+.how h3:first-child{margin-top:0}
+.how p,.how li{color:var(--text-2)}
+.how ul{margin:6px 0;padding-left:20px}
+footer{margin-top:18px;color:var(--text-3);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Pokémon card tracker</h1>
+    <p id="subtitle"></p>
+    <div id="note"></div>
+  </header>
+  <section class="tiles" id="tiles" aria-label="Summary"></section>
+  <div class="bar" role="search">
+    <input type="search" id="q" placeholder="Search card or set" aria-label="Search card or set">
+    <select id="dir" aria-label="Direction"><option value="">Up and down</option><option value="up">Rising</option><option value="down">Falling</option></select>
+    <select id="sev" aria-label="Severity"><option value="">Any severity</option><option value="high">High</option><option value="medium">Medium</option><option value="watch">Watch</option></select>
+    <select id="lang" aria-label="Language"><option value="">All languages</option></select>
+    <label>$ <input type="number" id="pmin" min="0" step="50" placeholder="min" aria-label="Minimum price"></label>
+    <label>to <input type="number" id="pmax" min="0" step="50" placeholder="max" aria-label="Maximum price"></label>
+    <label><input type="checkbox" id="newonly"> New today</label>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="panel" id="panel"></div>
+  <footer id="foot"></footer>
+</div>
+<div id="tip" role="status"></div>
+<script>
+const D = /*__DATA__*/null;
+const M = D.meta, $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = x => x == null ? "–" : "$" + x.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const U = D.universe.map(a => ({id:a[0],n:a[1],s:a[2],no:a[3],pr:a[4],lang:a[5],p:a[6],c1:a[7],c7:a[8],c30:a[9],z:a[10],pc:a[11]}));
+const LISTS = {alerts: D.alerts, gainers: D.gainers, losers: D.losers, all: U};
+const state = {tab: "alerts", sort: {}, shown: 100};
+
+function delta(x){
+  if (x == null) return '<span class="muted">–</span>';
+  const up = x > 0, flat = Math.abs(x) < 0.05;
+  if (flat) return '<span class="d">0.0%</span>';
+  return `<span class="d ${up ? "up" : "down"}"><i aria-hidden="true">${up ? "▲" : "▼"}</i>${up ? "+" : "−"}${Math.abs(x).toFixed(1)}%</span>`;
+}
+function dayLabel(off){
+  const d = new Date(M.date + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + off);
+  return d.toLocaleDateString("en-US", {month: "short", day: "numeric", timeZone: "UTC"});
+}
+function spark(sp){
+  if (!sp || sp.length < 2) return '<span class="muted">–</span>';
+  const W = 132, H = 34, pad = 4;
+  const xs = sp.map(p => p[0]), ys = sp.map(p => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const X = x => pad + (x1 === x0 ? 0 : (x - x0) / (x1 - x0)) * (W - 2 * pad);
+  const Y = y => H - pad - (y1 === y0 ? .5 : (y - y0) / (y1 - y0)) * (H - 2 * pad);
+  const path = sp.map((p, i) => (i ? "L" : "M") + X(p[0]).toFixed(1) + " " + Y(p[1]).toFixed(1)).join("");
+  const last = sp[sp.length - 1];
+  return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="Price over ${x1 - x0} days, ${money(sp[0][1])} to ${money(last[1])}" data-sp='${JSON.stringify(sp)}'>
+    <path d="${path}" fill="none" stroke="var(--series)" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/>
+    <line class="cx" y1="2" y2="${H - 2}" stroke="var(--text-3)" stroke-width="1" visibility="hidden"/>
+    <circle class="cd" r="4" cx="${X(last[0]).toFixed(1)}" cy="${Y(last[1]).toFixed(1)}" fill="var(--series)" stroke="var(--surface)" stroke-width="2"/>
+  </svg>`;
+}
+function links(c){
+  const setName = (c.s || "").replace(/^[A-Z0-9]+:\s*/, "");
+  const q = encodeURIComponent(`pokemon ${c.n} ${c.no || ""} ${setName}`.replace(/\s+/g, " ").trim());
+  const qs = encodeURIComponent(`pokemon ${c.n}`.replace(/\s*\(.*?\)\s*/g, " ").trim());
+  const tcg = c.url || `https://www.tcgplayer.com/product/${c.id}`;
+  return `<span class="links">
+    <a href="${esc(tcg)}" target="_blank" rel="noopener">TCGplayer</a>
+    <a href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank" rel="noopener">eBay sold</a>
+    <a href="https://www.ebay.com/sch/i.html?_nkw=${q}&_sop=15" target="_blank" rel="noopener">eBay live</a>
+    <a href="https://www.facebook.com/marketplace/search/?query=${qs}" target="_blank" rel="noopener">Facebook</a></span>`;
+}
+function nameCell(c){
+  const sub = [c.s, c.no, c.pr, c.lang].filter(Boolean).map(esc).join(" · ");
+  return `<div class="name">${esc(c.n)}${c.new ? '<span class="new">new</span>' : ""}</div><div class="sub">${sub}</div>`;
+}
+const SEV = {high: ["●", "High"], medium: ["◆", "Medium"], watch: ["○", "Watch"]};
+function sevCell(c){ const s = SEV[c.sev]; return s ? `<span class="sev ${c.sev}"><i aria-hidden="true">${s[0]}</i>${s[1]}</span>` : ""; }
+function whyCell(c){
+  return `<div class="chips">${(c.why || []).map(w => `<span class="chip why">${esc(w)}</span>`).join("")}${(c.tags || []).map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>`;
+}
+function volCell(c){
+  let out = [];
+  if (c.vol) out.push(`${c.vol.r} sold / 3d` + (c.vol.x != null ? ` · ${c.vol.x}× usual` : ""));
+  if (c.ebay && c.ebay.sales_velocity != null) out.push(`graded eBay: ${c.ebay.sales_velocity}/day`);
+  return out.length ? out.map(esc).join("<br>") : '<span class="muted">–</span>';
+}
+const zCell = c => c.z == null ? '<span class="muted" title="Not enough history yet">–</span>' : `${Math.abs(c.z).toFixed(1)}×`;
+const pcCell = c => c.pc == null ? '<span class="muted">–</span>' : `${c.pc.toFixed(0)}`;
+
+function columns(tab){
+  const detail = tab !== "all";
+  const cols = [];
+  if (tab === "alerts") cols.push({h: "Signal", k: "sevn", f: sevCell});
+  cols.push({h: "Card", k: "n", f: nameCell, cls: "card"});
+  cols.push({h: "Price", k: "p", num: 1, f: c => money(c.p)});
+  cols.push({h: "1 day", k: "c1", num: 1, f: c => delta(c.c1)});
+  cols.push({h: "7 days", k: "c7", num: 1, f: c => delta(c.c7)});
+  cols.push({h: "30 days", k: "c30", num: 1, f: c => delta(c.c30)});
+  cols.push({h: "vs. normal", k: "az", num: 1, f: zCell, t: "How many times bigger the 7-day move is than this card's usual 7-day swing"});
+  cols.push({h: "Rank", k: "pc", num: 1, f: pcCell, t: "Percentile of the 7-day move among all tracked cards today (100 = biggest gain, 0 = biggest drop)"});
+  if (detail) cols.push({h: "60-day price", f: c => spark(c.sp)});
+  if (tab === "alerts") cols.push({h: "Why", f: whyCell});
+  if (detail && M.volume_enabled) cols.push({h: "Sales volume", f: volCell});
+  cols.push({h: "Check", f: links});
+  return cols;
+}
+const sevRank = {high: 3, medium: 2, watch: 1};
+function val(c, k){
+  if (k === "sevn") return sevRank[c.sev] || 0;
+  if (k === "az") return c.z == null ? null : Math.abs(c.z);
+  return c[k];
+}
+function filtered(tab){
+  const q = $("#q").value.trim().toLowerCase(), dir = $("#dir").value, sev = $("#sev").value, lang = $("#lang").value;
+  const pmin = parseFloat($("#pmin").value), pmax = parseFloat($("#pmax").value), newonly = $("#newonly").checked;
+  let rows = LISTS[tab].filter(c => {
+    if (q && !(`${c.n} ${c.s} ${c.no}`.toLowerCase().includes(q))) return false;
+    if (lang && c.lang !== lang) return false;
+    if (!isNaN(pmin) && c.p < pmin) return false;
+    if (!isNaN(pmax) && c.p > pmax) return false;
+    if (dir){ const d = c.dir || (c.c7 == null ? "" : c.c7 >= 0 ? "up" : "down"); if (d !== dir) return false; }
+    if (tab === "alerts"){ if (sev && c.sev !== sev) return false; if (newonly && !c.new) return false; }
+    return true;
+  });
+  const s = state.sort[tab];
+  if (s) rows = rows.slice().sort((a, b) => {
+    const x = val(a, s.k), y = val(b, s.k);
+    if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+    return (typeof x === "string" ? x.localeCompare(y) : x - y) * s.dir;
+  });
+  return rows;
+}
+function renderTable(tab){
+  const cols = columns(tab), rows = filtered(tab), s = state.sort[tab];
+  if (!rows.length){
+    const msg = LISTS[tab].length ? "No cards match these filters." :
+      tab === "alerts" ? (M.days_of_history < 8 ? "No alerts yet. Seven-day signals begin once 8 days of prices are stored." : "No cards crossed an alert threshold today.") : "Nothing to show yet.";
+    return `<div class="empty">${msg}</div>`;
+  }
+  const cap = tab === "all" ? state.shown : rows.length;
+  const head = cols.map(c => `<th${c.num ? ' class="num"' : ""}${c.k ? ` data-k="${c.k}" tabindex="0" role="button"` : ""}${c.t ? ` title="${esc(c.t)}"` : ""}>${c.h}${s && s.k === c.k ? `<span class="ar">${s.dir > 0 ? "↑" : "↓"}</span>` : ""}</th>`).join("");
+  const body = rows.slice(0, cap).map(r => `<tr>${cols.map(c => `<td${c.num ? ' class="num"' : c.cls ? ` class="${c.cls}"` : ""}>${c.f(r)}</td>`).join("")}</tr>`).join("");
+  const more = rows.length > cap ? `<button class="more" id="more">Show more (${(rows.length - cap).toLocaleString()} remaining)</button>` : "";
+  return `<div class="scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${more}`;
+}
+function renderHistory(){
+  if (!D.history.length) return '<div class="empty">No alerts logged yet.</div>';
+  const q = $("#q").value.trim().toLowerCase();
+  const rows = D.history.filter(h => !q || `${h.name} ${h.set}`.toLowerCase().includes(q));
+  return `<div class="scroll"><table><thead><tr><th>Date</th><th>Card</th><th>Signal</th><th class="num">Price</th><th class="num">7 days</th><th>Why</th></tr></thead><tbody>${
+    rows.map(h => `<tr><td class="num" style="text-align:left">${esc(h.date)}</td>
+      <td><div class="name">${esc(h.name)}</div><div class="sub">${esc([h.set, h.printing].filter(Boolean).join(" · "))}</div></td>
+      <td>${sevCell({sev: h.severity})}</td><td class="num">${money(parseFloat(h.price))}</td>
+      <td class="num">${delta(h.chg_7d_pct === "" ? null : parseFloat(h.chg_7d_pct))}</td>
+      <td class="sub">${esc(h.reasons)}</td></tr>`).join("")}</tbody></table></div>`;
+}
+function renderHow(){
+  const T = M.thresholds;
+  return `<div class="how">
+  <h3>What this tracks</h3>
+  <p>Every Pokémon card printing whose TCGplayer market price (a rolling average of recent completed sales) is between $${M.band.min.toLocaleString()} and $${M.band.max.toLocaleString()}. Prices are saved once a day, so every change shown here is measured against this tracker's own stored history.</p>
+  <h3>When a card is flagged</h3>
+  <ul>
+    <li><b>7-day move:</b> price changed at least ${T.move_7d_pct}% and $${T.min_dollar_move} in a week, and the move is at least ${T.z_7d_min}× that card's normal weekly swing. Cards without enough history need ${T.move_7d_pct_no_history}%.</li>
+    <li><b>1-day jump:</b> at least ${T.move_1d_pct}% and $${T.min_dollar_move} since the previous day, and at least ${T.z_1d_min}× the card's normal daily swing.</li>
+    <li><b>30-day trend:</b> at least ${T.move_30d_pct}% over a month.</li>
+    <li><b>Volume spike:</b> sales over the last 3 days at least ${T.volume_spike_ratio}× the card's usual pace (only for cards with volume data).</li>
+  </ul>
+  <p><b>High</b> means a 7-day move of ${T.high_severity_7d_pct}%+ that either held for two or more days or is matched by listing prices moving the same way. <b>Medium</b> is any other 7-day move or volume spike. <b>Watch</b> is a 1-day or 30-day signal alone.</p>
+  <h3>Reading the columns</h3>
+  <ul>
+    <li><b>vs. normal:</b> the 7-day move divided by the card's own typical 7-day swing. A steady card reaches 4× on a smaller percentage move than a jumpy card does; either way the move is equally unusual for that card.</li>
+    <li><b>Rank:</b> percentile of the 7-day move across all tracked cards today. 99 is among the top 1% of gainers, 1 among the steepest drops.</li>
+    <li><b>Check:</b> one-click searches for eBay sold listings, live eBay listings and Facebook Marketplace, to confirm the move and compare asking prices.</li>
+  </ul>
+  <h3>Limits</h3>
+  <ul>
+    <li>Prices are for ungraded (raw) cards on TCGplayer. Graded slabs and eBay-only sales are not in the price feed; use the eBay sold link to confirm.</li>
+    <li>Thinly traded cards can jump on a single sale. "Listings agree" and "held 2+ days" tags mark the sturdier signals.</li>
+    <li>Facebook Marketplace publishes no sold prices and no data feed, so it is a search link, not a data source.</li>
+  </ul></div>`;
+}
+function render(){
+  const tabs = [["alerts", "Alerts", D.alerts.length], ["gainers", "Top gainers", null], ["losers", "Top decliners", null],
+                ["all", "All tracked cards", U.length], ["history", "Alert history", null], ["how", "How it works", null]];
+  $("#tabs").innerHTML = tabs.map(([k, l, c]) => `<button role="tab" aria-selected="${state.tab === k}" data-tab="${k}">${l}${c != null ? `<span class="c">${c.toLocaleString()}</span>` : ""}</button>`).join("");
+  $("#panel").innerHTML = state.tab === "history" ? renderHistory() : state.tab === "how" ? renderHow() : renderTable(state.tab);
+}
+function init(){
+  $("#subtitle").textContent = `TCGplayer market prices · cards $${M.band.min.toLocaleString()}–$${M.band.max.toLocaleString()} · prices as of ${M.date} · ${M.days_of_history} days of history`;
+  if (M.days_of_history < 8) $("#note").innerHTML = `<p class="note">Still building history (${M.days_of_history} day${M.days_of_history === 1 ? "" : "s"} stored). One-day jumps show now; 7-day signals start at 8 days.</p>`;
+  const med = M.median_c7;
+  $("#tiles").innerHTML = [
+    ["Cards tracked", M.universe.toLocaleString(), `priced $${M.band.min.toLocaleString()}–$${M.band.max.toLocaleString()}`],
+    ["Alerts today", M.alerts.toLocaleString(), `${M.new_alerts} new today`],
+    ["Rising", M.up.toLocaleString(), "alerts with price up"],
+    ["Falling", M.down.toLocaleString(), "alerts with price down"],
+    ["Market median, 7 days", med == null ? "–" : (med > 0 ? "+" : med < 0 ? "−" : "") + Math.abs(med).toFixed(1) + "%", "typical card's weekly change"],
+  ].map(([k, v, s]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+  $("#lang").innerHTML += M.languages.map(l => `<option>${esc(l)}</option>`).join("");
+  $("#foot").textContent = `Generated ${M.generated}. Price data: TCGplayer via tcgcsv.com. Not financial advice.`;
+  document.querySelectorAll(".bar input, .bar select").forEach(e => e.addEventListener("input", () => { state.shown = 100; render(); }));
+  $("#tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b){ state.tab = b.dataset.tab; state.shown = 100; render(); } });
+  const sortBy = th => { const k = th.dataset.k, s = state.sort[state.tab];
+    state.sort[state.tab] = {k, dir: s && s.k === k ? -s.dir : (k === "n" ? 1 : -1)}; render(); };
+  $("#panel").addEventListener("click", e => {
+    const th = e.target.closest("th[data-k]"); if (th) return sortBy(th);
+    if (e.target.id === "more"){ state.shown += 200; render(); }
+  });
+  $("#panel").addEventListener("keydown", e => { const th = e.target.closest("th[data-k]"); if (th && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); sortBy(th); } });
+  const tip = $("#tip");
+  $("#panel").addEventListener("mousemove", e => {
+    const svg = e.target.closest("svg.spark"); if (!svg){ tip.style.display = "none"; return; }
+    const sp = JSON.parse(svg.dataset.sp), r = svg.getBoundingClientRect(), pad = 4, W = 132, H = 34;
+    const xs = sp.map(p => p[0]), ys = sp.map(p => p[1]);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const t = Math.min(1, Math.max(0, (e.clientX - r.left - pad) / (W - 2 * pad))), target = x0 + t * (x1 - x0);
+    let best = sp[0]; for (const p of sp) if (Math.abs(p[0] - target) < Math.abs(best[0] - target)) best = p;
+    const X = pad + (x1 === x0 ? 0 : (best[0] - x0) / (x1 - x0)) * (W - 2 * pad);
+    const Y = H - pad - (y1 === y0 ? .5 : (best[1] - y0) / (y1 - y0)) * (H - 2 * pad);
+    const cx = svg.querySelector(".cx"), cd = svg.querySelector(".cd");
+    cx.setAttribute("x1", X); cx.setAttribute("x2", X); cx.setAttribute("visibility", "visible");
+    cd.setAttribute("cx", X); cd.setAttribute("cy", Y);
+    tip.textContent = `${dayLabel(best[0])} · ${money(best[1])}`;
+    tip.style.display = "block"; tip.style.left = Math.min(e.clientX + 12, innerWidth - 150) + "px"; tip.style.top = (e.clientY - 34) + "px";
+  });
+  $("#panel").addEventListener("mouseleave", () => { tip.style.display = "none"; });
+  render();
+}
+init();
+</script>
+</body>
+</html>

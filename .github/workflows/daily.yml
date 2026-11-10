@@ -1,0 +1,51 @@
+name: Daily card tracker
+
+on:
+  schedule:
+    # 21:37 UTC every day (4:37 pm Eastern in winter). tcgcsv.com publishes
+    # its once-a-day TCGplayer price build around 20:00 UTC.
+    - cron: "37 21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: card-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install archive reader
+        run: pip install py7zr
+
+      - name: Download prices, find movers, rebuild dashboard
+        env:
+          PPT_API_KEY: ${{ secrets.PPT_API_KEY }}
+        run: python -m tracker run
+
+      - name: Show today's report on the run page
+        if: always()
+        run: |
+          if [ -f REPORT.md ]; then head -c 900000 REPORT.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Save data and dashboard to the repository
+        run: |
+          git config user.name "card-tracker"
+          git config user.email "card-tracker@users.noreply.github.com"
+          git add -A data docs REPORT.md
+          if git diff --cached --quiet; then
+            echo "Nothing changed today."
+          else
+            git commit -m "Prices and alerts for $(date -u +%F)"
+            git push
+          fi
