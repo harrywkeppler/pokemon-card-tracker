@@ -74,21 +74,31 @@ cards.
 
 ## How a card gets flagged
 
+TCGplayer's market price only changes when a card sells, which for most cards
+in this range is a few times a month. One sale can be an outlier (a graded copy
+sold as raw, a misprint), so a price move only counts when the lowest or median
+listing moved the same way, or two or more separate sales did. A single sale
+that moves the price 3× or more while listings stay flat is ignored.
+
 | Signal | Rule (all adjustable in `config.json`) |
 |---|---|
-| 7-day move | ±15% and ±$15 in a week, **and** at least 2.5× that card's own normal weekly swing |
-| 1-day jump | ±10% and ±$15 in a day, and at least 3× its normal daily swing |
-| 30-day trend | ±30% in a month |
-| Volume spike | 3-day sales ≥ 3× usual (needs the volume key) |
+| 7-day move | ±15% and ±$15 in a week, confirmed as above, and at least 2.5× that card's normal weekly swing |
+| 1-day jump | ±10% and ±$15 in a day, with listings moving the same way |
+| 30-day trend | ±30% in a month, from 2+ sales and matched by listings |
+| Selling more often | price changed on 3+ of the last 7 days, at 3× the pace of the three weeks before (a free stand-in for sales volume) |
+| Volume spike | 3-day units sold ≥ 3× usual (needs the volume key) |
 
-- **High**: a 7-day move of 30%+ that held for two or more days or is matched by
-  listing prices moving the same way.
-- **Medium**: any other 7-day move, or a volume spike.
-- **Watch**: a 1-day or 30-day signal alone, or a jump so extreme it is probably
-  a data error.
+- **High**: a 7-day move of 30%+ backed by both listings and repeat sales, or
+  coming with a jump in sales activity.
+- **Medium**: any other 7-day move, a volume spike, or more frequent sales
+  together with a price signal.
+- **Watch list** (hidden by default on the dashboard): a 30-day trend, 1-day
+  jump, or more frequent sales on their own.
 
 Each card also gets a **percentile rank** of its 7-day move against every other
-tracked card that day; the top and bottom 2% are tagged.
+tracked card that day (top and bottom 2% are tagged), and a **sale days** count:
+days in the last 30 with a price change. Cards with 2 or fewer are tagged
+"thinly traded".
 
 ## Settings (`config.json`)
 

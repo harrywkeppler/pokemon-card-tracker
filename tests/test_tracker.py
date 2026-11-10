@@ -41,7 +41,11 @@ PLANTS = {
     101007: "G $120 -> $50 crash out of the band",
     101008: "H data glitch $300 -> $2000 in one day",
     101009: "J steady $600, +25% on day T+1",
+    101010: "K thin card $250, one outlier sale to $2,500, listings flat",
+    101011: "L thin card $300 -> $420 on one sale, listings follow",
+    101012: "M thin card $180, sells far more often this week, price steady",
 }
+FIXED_LISTINGS = {101010: (240.0, 262.0)}   # low, mid stay put
 
 
 def build_market():
@@ -96,7 +100,23 @@ def build_market():
     h[iT + 1] = 300
     j = flat(600)
     j[iT + 1] = 750
-    for pid, path in zip(sorted(PLANTS), [a, b, c, d, e, f, g, h, j]):
+    k = [250.0] * len(days)
+    for i in range(iT - 3, len(days)):
+        k[i] = 2500.0
+    k[iT - 30] = 255.0
+    k[iT - 20] = 250.0
+    k[iT - 12] = 252.0
+    k[iT - 9] = 250.0
+    lthin = [300.0] * len(days)
+    lthin[iT - 40] = 305.0
+    for i in range(iT - 2, len(days)):
+        lthin[i] = 420.0
+    mthin = [180.0] * len(days)
+    for i in (iT - 25, iT - 15):
+        mthin[i] = 182.0
+    for i, v in zip(range(iT - 5, iT + 1), [183, 180, 184, 181, 183, 182]):
+        mthin[i] = float(v)
+    for pid, path in zip(sorted(PLANTS), [a, b, c, d, e, f, g, h, j, k, lthin, mthin]):
         prices[pid] = path
     # F is sealed product: no card number
     for p in products[(3, 101)]:
@@ -110,8 +130,9 @@ def price_rows(prices, products, cat, gid, idx):
     rows = []
     for p in products[(cat, gid)]:
         m = round(prices[p["productId"]][idx], 2)
-        rows.append({"productId": p["productId"], "lowPrice": round(m * 0.95, 2),
-                     "midPrice": round(m * 1.06, 2), "highPrice": round(m * 2, 2),
+        low, mid = FIXED_LISTINGS.get(p["productId"], (round(m * 0.95, 2), round(m * 1.06, 2)))
+        rows.append({"productId": p["productId"], "lowPrice": low,
+                     "midPrice": mid, "highPrice": round(m * 2, 2),
                      "marketPrice": m, "directLowPrice": None, "subTypeName": "Holofoil"})
     # a row with no market price must be ignored
     rows.append({"productId": gid * 1000 + 999, "lowPrice": 300, "midPrice": 300,
@@ -269,7 +290,7 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual((a["dir"], a["sev"]), ("up", "high"))
         self.assertAlmostEqual(a["c7"], 50, delta=1.5)
         self.assertIn("7-day move", a["why"])
-        self.assertIn("held 2+ days", a["tags"])
+        self.assertTrue(any(t.endswith("sales same way") for t in a["tags"]))
         self.assertTrue(a["new"])
         self.assertGreaterEqual(a["pc"], 98)
 
@@ -282,7 +303,7 @@ class EndToEnd(unittest.TestCase):
         c = self._alert(self.day1, 101003)
         self.assertEqual(c["sev"], "medium")
         self.assertIn("1-day jump", c["why"])
-        self.assertNotIn("held 2+ days", c["tags"])
+        self.assertFalse(any(t.endswith("sales same way") for t in c["tags"]))
 
     def test_volatile_card_not_flagged_for_normal_swing(self):
         d = self._alert(self.day1, 101004)
@@ -306,6 +327,23 @@ class EndToEnd(unittest.TestCase):
         h = self._alert(self.day1, 101008)
         self.assertEqual(h["sev"], "watch")
         self.assertTrue(any("verify" in t for t in h["tags"]))
+
+    def test_outlier_sale_ignored(self):
+        self.assertIsNone(self._alert(self.day1, 101010))
+
+    def test_thin_card_move_confirmed_by_listings(self):
+        lt = self._alert(self.day1, 101011)
+        self.assertIsNotNone(lt)
+        self.assertIn("7-day move", lt["why"])
+        self.assertIn("listings agree", lt["tags"])
+        self.assertIn("thinly traded", lt["tags"])
+        self.assertEqual(lt["sev"], "medium")
+
+    def test_selling_more_often(self):
+        m = self._alert(self.day1, 101012)
+        self.assertIsNotNone(m)
+        self.assertEqual(m["why"], ["selling more often"])
+        self.assertEqual(m["sev"], "watch")
 
     def test_second_day(self):
         a = self._alert(self.day2, 101001)

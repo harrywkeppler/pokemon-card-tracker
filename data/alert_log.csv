@@ -1,353 +1,93 @@
 date,productId,printing,name,set,direction,severity,reasons,price,chg_7d_pct
-2026-11-10,86879,Normal,Lucario,Rumble,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,2997.81,1160.6
-2026-11-10,83889,Reverse Holofoil,Blastoise (36),Expedition,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,1649.68,842.7
-2026-11-10,90139,Holofoil,Umbreon (H29),Aquapolis,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,3850.00,449.0
-2026-11-10,86669,Reverse Holofoil,Latios (Delta Species),EX Delta Species,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,1118.96,366.2
-2026-11-10,84211,Holofoil,Charmander - 113/112,EX FireRed & LeafGreen,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,328.99,314.0
-2026-11-10,83908,Reverse Holofoil,Blaziken,EX Power Keepers,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,249.94,257.9
-2026-11-10,614508,1st Edition,Bulbasaur - 002/029,Pokemon-e Starter Deck,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,120.00,242.9
-2026-11-10,86300,Reverse Holofoil,Ivysaur - 034/100,EX Crystal Guardians,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,150.00,183.0
-2026-11-10,89682,Holofoil,Swampert ex,EX Team Magma vs Team Aqua,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,545.97,169.7
-2026-11-10,88997,Reverse Holofoil,Scyther (106),Aquapolis,up,high,7-day move; top 2% of movers; broke above $100; listings agree; held 2+ days,229.99,165.4
-2026-11-10,87878,Reverse Holofoil,Onix,Aquapolis,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,199.00,165.4
-2026-11-10,88439,Reverse Holofoil,Psyduck,Platinum,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,350.00,164.8
-2026-11-10,88089,Holofoil,Pikachu - DP16,Diamond and Pearl Promos,up,high,7-day move; top 2% of movers; held 2+ days,309.45,158.1
-2026-11-10,83897,Holofoil,Blastoise,Plasma Storm,up,high,7-day move; 30-day trend; top 2% of movers; listings agree; held 2+ days,1099.98,130.6
-2026-11-10,87567,Holofoil,Moltres ex - 031 (EX Collector's Window Tins),Nintendo Promos,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,300.00,126.5
-2026-11-10,84188,Holofoil,Charizard,EX Power Keepers,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,450.00,124.9
-2026-11-10,86295,Reverse Holofoil,Ivysaur,Legendary Collection,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,350.00,123.4
-2026-11-10,84832,Reverse Holofoil,Ditto,EX Delta Species,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,309.98,107.6
-2026-11-10,86445,Reverse Holofoil,Kingdra,EX Team Rocket Returns,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,170.00,106.1
-2026-11-10,83444,Reverse Holofoil,Abra,Skyridge,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,300.00,106.1
-2026-11-10,83904,Reverse Holofoil,Blaziken - 15/109,EX Ruby and Sapphire,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,125.81,101.2
-2026-11-10,630838,Normal,Lt. Surge's Raichu,Pokemon VS,up,high,7-day move; top 2% of movers; broke above $100; listings agree; held 2+ days,119.99,100.0
-2026-11-10,86452,Holofoil,Kingdra ex (Delta Species),EX Dragon Frontiers,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,280.99,98.8
-2026-11-10,87767,Holofoil,Ninetales (H19),Aquapolis,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,630.00,96.9
-2026-11-10,84183,Holofoil,Charizard (6),Expedition,down,high,7-day move; 30-day trend; bottom 2% of movers; held 2+ days,100.00,-88.6
-2026-11-10,85413,1st Edition Holofoil,Feraligatr (5),Neo Genesis,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,503.94,84.8
-2026-11-10,85631,Holofoil,Garchomp LV.X,Majestic Dawn,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,343.50,83.7
-2026-11-10,88269,1st Edition Holofoil,Poliwrath (9),Neo Discovery,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,155.97,83.5
-2026-11-10,576306,Unlimited Holofoil,Muk - 005/092,The Town on No Map,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; held 2+ days,29.00,-80.7
-2026-11-10,83888,Reverse Holofoil,Blastoise (4),Expedition,up,high,7-day move; top 2% of movers; held 2+ days,499.95,78.6
-2026-11-10,88226,Normal,Pokemon Fan Club,POP Series 4,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,182.05,78.5
-2026-11-10,86887,Reverse Holofoil,Lucario C,Supreme Victors,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; held 2+ days,31.53,-77.5
-2026-11-10,86240,Holofoil,Hydreigon,Next Destinies,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,283.49,71.8
-2026-11-10,84758,Holofoil,Deoxys (Shiny),Call of Legends,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,850.00,70.0
-2026-11-10,125897,Normal,Pikachu - 58/102 (PokeTour 1999),Miscellaneous Cards & Products,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; held 2+ days,75.00,-70.0
-2026-11-10,88635,Reverse Holofoil,Rayquaza - 026/110 (Delta Species),EX Holon Phantoms,down,high,7-day move; bottom 2% of movers; listings agree; held 2+ days,395.08,-67.1
-2026-11-10,85821,Holofoil,Golem (14),Expedition,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,108.15,66.4
-2026-11-10,91246,Holofoil,M Charizard EX (X) (Secret),XY - Flashfire,down,high,7-day move; 30-day trend; bottom 2% of movers; held 2+ days,504.98,-66.4
-2026-11-10,576196,1st Edition Holofoil,Ledian - 007/088,Split Earth,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; held 2+ days,45.00,-62.5
-2026-11-10,84626,Reverse Holofoil,Dark Magneton,EX Team Rocket Returns,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; listings agree; held 2+ days,145.48,62.2
-2026-11-10,97705,Holofoil,Latias - HGSS10 (Cracked Ice Holo),HGSS Promos,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,461.41,54.1
-2026-11-10,88443,Reverse Holofoil,Psyduck (Delta Species),EX Holon Phantoms,up,high,7-day move; 1-day jump; 30-day trend; top 2% of movers; listings agree,316.99,52.6
-2026-11-10,84771,Holofoil,Deoxys ex (Defense Forme),EX Deoxys,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,267.60,51.7
-2026-11-10,83574,Holofoil,Arcanine (H2),Skyridge,down,high,7-day move; 30-day trend; bottom 2% of movers; held 2+ days,256.65,-48.7
-2026-11-10,713258,Holofoil,Espeon ex - 108 (30th Celebration),ME: Mega Evolution Promo,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; listings agree; held 2+ days,74.92,-43.8
-2026-11-10,84837,Reverse Holofoil,Ditto - 040/113 (Squirtle),EX Delta Species,down,high,7-day move; 30-day trend; bottom 2% of movers; held 2+ days,226.59,-43.4
-2026-11-10,90436,Reverse Holofoil,Vulpix,Expedition,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; listings agree; held 2+ days,119.99,42.0
-2026-11-10,713259,Holofoil,Umbreon ex - 110 (30th Celebration),ME: Mega Evolution Promo,down,high,7-day move; 30-day trend; bottom 2% of movers; fell below $100; listings agree; held 2+ days,89.75,-41.9
-2026-11-10,86904,1st Edition,Lugia,Neo Revelation,down,high,7-day move; bottom 2% of movers; held 2+ days,148.99,-41.5
-2026-11-10,87298,Holofoil,Meganium ex,EX Unseen Forces,down,high,7-day move; 30-day trend; bottom 2% of movers; held 2+ days,124.77,-37.8
-2026-11-10,88895,Holofoil,Salamence - 10/97,EX Dragon,up,high,7-day move; 30-day trend; top 2% of movers; held 2+ days,449.99,37.6
-2026-11-10,86638,Reverse Holofoil,Larvitar - 063/109,EX Team Rocket Returns,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,121.46,37.3
-2026-11-10,84596,Reverse Holofoil,Dark Flaaffy,EX Team Rocket Returns,up,high,7-day move; 30-day trend; top 2% of movers; broke above $100; held 2+ days,129.99,36.8
-2026-11-10,88525,Holofoil,Raichu ex,EX Sandstorm,up,high,7-day move; 30-day trend; held 2+ days,524.99,35.5
-2026-11-10,574828,Holofoil,Charizard GX,SM8b: GX Ultra Shiny,up,high,7-day move; held 2+ days,275.00,31.0
-2026-11-10,107017,1st Edition,Pidgeotto,Base Set (Shadowless),up,high,7-day move; broke above $100; listings agree; held 2+ days,107.87,30.6
-2026-11-10,107071,1st Edition,Lass,Base Set (Shadowless),up,medium,7-day move; 1-day jump; 30-day trend; top 2% of movers; broke above $100,251.50,157.5
-2026-11-10,83496,Reverse Holofoil,Alakazam,Legendary Collection,down,medium,7-day move; 1-day jump; 30-day trend; bottom 2% of movers,321.10,-62.2
-2026-11-10,86656,Reverse Holofoil,Latias - 011/110 (Delta Species),EX Holon Phantoms,up,medium,7-day move; 1-day jump; 30-day trend; top 2% of movers,250.00,62.1
-2026-11-10,107008,1st Edition Holofoil,Ninetales,Base Set (Shadowless),down,medium,7-day move; 1-day jump; 30-day trend; bottom 2% of movers,350.50,-56.2
-2026-11-10,84812,Holofoil,Dialga LV.X,Great Encounters,up,medium,7-day move; 1-day jump; 30-day trend,265.89,33.3
-2026-11-10,85609,Holofoil,Gallade E4 Lv.X,Rising Rivals,up,medium,7-day move; 1-day jump,150.98,29.8
-2026-11-10,200193,Reverse Holofoil,Pokegear 3.0 - 182a/214 (League Cup) [Staff],League & Championship Cards,up,medium,7-day move; 30-day trend; held 2+ days,160.21,29.8
-2026-11-10,475983,Holofoil,Charizard VMAX - 020/189,Prize Pack Series Cards,up,medium,7-day move; held 2+ days,1600.00,29.7
-2026-11-10,86655,Holofoil,Latias (Delta Species),EX Delta Species,up,medium,7-day move; 30-day trend; listings agree; held 2+ days,178.55,29.3
-2026-11-10,89388,Holofoil,Snorlax,EX FireRed & LeafGreen,up,medium,7-day move; 30-day trend; held 2+ days,254.73,29.1
-2026-11-10,631900,Normal,Lance's Gyarados,Pokemon VS,up,medium,7-day move; held 2+ days,200.00,29.0
-2026-11-10,90126,Holofoil,Tyranitar ex (Delta Species),EX Dragon Frontiers,up,medium,7-day move; held 2+ days,259.98,28.9
-2026-11-10,86453,Holofoil,Kingler (15),Expedition,up,medium,7-day move; 1-day jump; 30-day trend,128.98,26.0
-2026-11-10,84599,1st Edition Holofoil,Dark Gengar,Neo Destiny,down,medium,7-day move; bottom 2% of movers; held 2+ days,749.99,-25.0
-2026-11-10,84189,Holofoil,Charizard,Secret Wonders,up,medium,7-day move; 30-day trend; held 2+ days,208.66,24.2
-2026-11-10,84811,Holofoil,Dialga G LV.X,Platinum,up,medium,7-day move; 30-day trend; held 2+ days,392.45,22.9
-2026-11-10,622694,Normal,Jasmine's Jolteon,Pokemon VS,up,medium,7-day move; held 2+ days,175.00,22.8
-2026-11-10,574969,Holofoil,Blastoise & Piplup GX - 076/064,SM11a: Remix Bout,up,medium,7-day move; 1-day jump; broke above $100,109.01,22.5
-2026-11-10,495976,Holofoil,Boltund VMAX - 104/264,Prize Pack Series Cards,up,medium,7-day move; 1-day jump,151.07,22.4
-2026-11-10,97093,Holofoil,Volcarona - BW40 (Prerelease) [Staff],Black and White Promos,down,medium,7-day move; 1-day jump; bottom 2% of movers,171.98,-22.2
-2026-11-10,87405,Holofoil,Mew (Prime),Triumphant,up,medium,7-day move; held 2+ days,500.00,22.0
-2026-11-10,88848,Reverse Holofoil,Sableye,EX Deoxys,up,medium,7-day move; held 2+ days,273.37,21.8
-2026-11-10,88112,Holofoil,Piloswine (H22),Skyridge,down,medium,7-day move; bottom 2% of movers; held 2+ days,305.50,-21.4
-2026-11-10,88875,1st Edition,Sabrina's Gengar,Gym Challenge,up,medium,7-day move; 30-day trend; held 2+ days,670.00,20.8
-2026-11-10,691978,Holofoil,Rayquaza - 003/017 (2006),Blister Exclusives,up,medium,7-day move; 30-day trend; listings agree; held 2+ days,205.89,20.7
-2026-11-10,87743,Reverse Holofoil,Nidorino,Legendary Collection,up,medium,7-day move; held 2+ days,145.16,20.7
-2026-11-10,86206,Reverse Holofoil,Houndoom,EX Unseen Forces,down,medium,7-day move; bottom 2% of movers; held 2+ days,128.99,-20.4
-2026-11-10,89331,Reverse Holofoil,Slowpoke,Great Encounters,up,medium,7-day move; 30-day trend; held 2+ days,150.00,20.0
-2026-11-10,85165,Holofoil,Electrode ex,EX FireRed & LeafGreen,up,medium,7-day move; listings agree; held 2+ days,179.99,18.4
-2026-11-10,88109,Holofoil,Pikachu (Delta Species) - 035 (Value Pack),Nintendo Promos,up,medium,7-day move; 1-day jump,308.86,18.3
-2026-11-10,84917,Holofoil,Dragonite (Delta Species),EX Delta Species,up,medium,7-day move; 30-day trend; held 2+ days,496.83,18.3
-2026-11-10,89178,Reverse Holofoil,Shinx (Shiny),Arceus,up,medium,7-day move; listings agree; held 2+ days,195.00,18.2
-2026-11-10,87563,Holofoil,Moltres (149),Supreme Victors,up,medium,7-day move; held 2+ days,456.78,17.8
-2026-11-10,85535,Holofoil,Flying Pikachu,Rising Rivals,up,medium,7-day move; held 2+ days,338.33,17.2
-2026-11-10,90634,Reverse Holofoil,Wooper,EX Team Rocket Returns,up,medium,7-day move; 30-day trend; broke above $100; listings agree; held 2+ days,116.55,16.7
-2026-11-10,215156,Holofoil,Pikachu (Spanish),Pikachu World Collection Promos,down,medium,7-day move; bottom 2% of movers; listings agree; held 2+ days,100.00,-16.7
-2026-11-10,147229,1st Edition,Pikachu (Red Cheeks),Base Set (Shadowless),up,medium,7-day move; held 2+ days,500.00,16.3
-2026-11-10,86656,Holofoil,Latias - 011/110 (Delta Species),EX Holon Phantoms,down,medium,7-day move; bottom 2% of movers; fell below $100; held 2+ days,85.00,-16.2
-2026-11-10,476064,Holofoil,Zacian V - 138/202,Prize Pack Series Cards,up,medium,7-day move; 30-day trend; held 2+ days,119.67,16.1
-2026-11-10,89564,Holofoil,Steelix (Prime),Unleashed,up,medium,7-day move; held 2+ days,144.96,16.0
-2026-11-10,90539,Reverse Holofoil,Weedle,Legendary Collection,up,medium,7-day move; 30-day trend; held 2+ days,165.82,15.9
-2026-11-10,87458,Reverse Holofoil,Milotic (Delta Species),EX Dragon Frontiers,up,medium,7-day move; held 2+ days,173.53,15.9
-2026-11-10,86440,1st Edition Holofoil,Kingdra,Neo Genesis,up,medium,7-day move; held 2+ days,143.66,15.9
-2026-11-10,85739,Holofoil,Giratina (Team Plasma),Black and White Promos,up,medium,7-day move; held 2+ days,402.04,15.4
-2026-11-10,107005,Unlimited Holofoil,Mewtwo,Base Set (Shadowless),up,medium,7-day move; held 2+ days,339.99,15.2
-2026-11-10,84844,Reverse Holofoil,Ditto,Triumphant,up,medium,7-day move; 1-day jump,149.99,15.2
-2026-11-10,46478,Reverse Holofoil,Togepi,Southern Islands,up,medium,7-day move; 30-day trend; held 2+ days,329.23,15.1
-2026-11-10,84898,Reverse Holofoil,Dragonair,Expedition,up,medium,7-day move; broke above $100; listings agree; held 2+ days,115.00,15.0
-2026-11-10,90103,Holofoil,Typhlosion,EX Unseen Forces,up,watch,30-day trend; top 2% of movers; held 2+ days,979.82,81.5
-2026-11-10,84149,Holofoil,Celebi Star,EX Crystal Guardians,up,watch,30-day trend; top 2% of movers; held 2+ days,1116.68,48.9
-2026-11-10,86351,Holofoil,Jolteon Star,EX Power Keepers,up,watch,30-day trend; held 2+ days,2374.50,35.7
-2026-11-10,276377,Normal,Pikachu (Pokemon Day Stamped),POP Series 6,up,watch,1-day jump; 30-day trend,249.99,25.0
-2026-11-10,45123,1st Edition Holofoil,Vaporeon (12),Jungle,up,watch,30-day trend; held 2+ days,312.49,23.5
-2026-11-10,83892,Reverse Holofoil,Blastoise,EX Crystal Guardians,up,watch,30-day trend; held 2+ days,300.00,23.3
-2026-11-10,88628,Reverse Holofoil,Rayquaza,Call of Legends,up,watch,30-day trend; held 2+ days,874.60,21.0
-2026-11-10,89437,Reverse Holofoil,Spearow,Legendary Collection,up,watch,30-day trend; held 2+ days,174.97,16.7
-2026-11-10,709267,Holofoil,Mega Rayquaza ex - 113/076,M6: Storm Emeralda,down,watch,30-day trend; bottom 2% of movers; held 2+ days,596.96,-14.4
-2026-11-10,83458,Holofoil,Absol G Lv.X,Supreme Victors,up,watch,30-day trend; held 2+ days,133.64,14.4
-2026-11-10,683765,Holofoil,Mega Greninja ex - 114/083,M4: Ninja Spinner,down,watch,30-day trend; bottom 2% of movers; listings agree; held 2+ days,175.40,-13.7
-2026-11-10,89315,Reverse Holofoil,Slowking,EX Delta Species,up,watch,30-day trend; broke above $100; listings agree; held 2+ days,103.99,13.5
-2026-11-10,87604,Reverse Holofoil,Mudkip - 010 (e-League),Nintendo Promos,up,watch,1-day jump,194.26,13.4
-2026-11-10,83456,Holofoil,Absol ex,EX Power Keepers,up,watch,1-day jump,232.08,13.2
-2026-11-10,598347,Holofoil,Red's Pikachu - 270/SM-P,SM-P: Sun & Moon Promos,up,watch,30-day trend; held 2+ days,650.00,13.0
-2026-11-10,86741,1st Edition,Light Jolteon,Neo Destiny,down,watch,30-day trend; bottom 2% of movers; held 2+ days,239.15,-13.0
-2026-11-10,90145,Holofoil,Umbreon,Undaunted,up,watch,1-day jump; 30-day trend; held 2+ days,171.71,12.9
-2026-11-10,86341,Holofoil,Jolteon,EX Unseen Forces,up,watch,30-day trend; broke above $100; listings agree; held 2+ days,103.49,11.3
-2026-11-10,86861,1st Edition Holofoil,Lt. Surge's Raichu,Gym Challenge,up,watch,30-day trend; listings agree; held 2+ days,233.00,10.6
-2026-11-10,88785,Holofoil,Rocket's Raikou ex,EX Deoxys,up,watch,30-day trend; listings agree; held 2+ days,308.74,10.3
-2026-11-10,489291,Holofoil,Charizard VSTAR - 018/172,Prize Pack Series Cards,up,watch,30-day trend; held 2+ days,550.00,10.1
-2026-11-10,89675,Reverse Holofoil,Swampert - 13/109,EX Ruby and Sapphire,up,watch,30-day trend; held 2+ days,112.39,9.3
-2026-11-10,84744,Holofoil,Delcatty ex,EX Crystal Guardians,up,watch,30-day trend; listings agree; held 2+ days,121.25,9.2
-2026-11-10,676093,Holofoil,Team Rocket's Mewtwo ex - 281/217,ME: Ascended Heroes,down,watch,30-day trend; bottom 2% of movers; listings agree; held 2+ days,163.64,-8.8
-2026-11-10,213012,Normal,Rayquaza - 22/107 (2004-2005 Gym Challenge),League & Championship Cards,up,watch,30-day trend; held 2+ days,363.72,8.5
-2026-11-10,44423,1st Edition Holofoil,Raichu (14),Fossil,down,watch,30-day trend; bottom 2% of movers; held 2+ days,202.80,-8.4
-2026-11-10,46468,Reverse Holofoil,Marill,Southern Islands,up,watch,30-day trend; held 2+ days,242.56,7.5
-2026-11-10,88090,Reverse Holofoil,Pikachu,Stormfront,up,watch,30-day trend; held 2+ days,113.42,7.3
-2026-11-10,87434,Holofoil,Mewtwo LV.X - DP28,Diamond and Pearl Promos,down,watch,30-day trend; held 2+ days,346.97,-6.9
-2026-11-10,88094,Reverse Holofoil,Pikachu,Arceus,up,watch,30-day trend; broke above $100; held 2+ days,105.69,6.5
-2026-11-10,86132,Holofoil,Ho-Oh Legend (Bottom),HeartGold SoulSilver,up,watch,30-day trend; held 2+ days,225.25,5.7
-2026-11-10,85060,Holofoil,Dustox ex,EX Legend Maker,down,watch,30-day trend,120.00,-5.7
-2026-11-10,676088,Holofoil,Pikachu ex - 276/217,ME: Ascended Heroes,down,watch,30-day trend; held 2+ days,561.57,-5.2
-2026-11-10,86063,Reverse Holofoil,Heracross,EX Team Rocket Returns,up,watch,30-day trend; listings agree; held 2+ days,126.51,5.1
-2026-11-10,107013,1st Edition,Dragonair,Base Set (Shadowless),down,watch,30-day trend; held 2+ days,134.39,-5.0
-2026-11-10,84813,Holofoil,Dialga LV.X - DP17,Diamond and Pearl Promos,up,watch,30-day trend,286.06,3.9
-2026-11-10,164205,Normal,Gabite - 48/123 (Prerelease) [Staff],Diamond and Pearl Promos,up,watch,30-day trend; held 2+ days,214.00,3.4
-2026-11-10,166530,Reverse Holofoil,Delibird - 38/149 (Pokemon League) [1st Place],League & Championship Cards,up,watch,30-day trend; listings agree; held 2+ days,104.67,3.3
-2026-11-10,101516,Holofoil,Lugia EX (94 Full Art),XY - Ancient Origins,up,watch,30-day trend; held 2+ days,294.08,3.1
-2026-11-10,83973,1st Edition Holofoil,Brock's Ninetales,Gym Challenge,down,watch,30-day trend; held 2+ days,252.75,-3.0
-2026-11-10,153234,Holofoil,Charizard - 1/99 (Cracked Ice Holo),Miscellaneous Cards & Products,up,watch,30-day trend; held 2+ days,144.75,2.1
-2026-11-10,85992,Holofoil,Gyarados,HeartGold SoulSilver,up,watch,30-day trend; listings agree; held 2+ days,173.89,2.1
-2026-11-10,84032,Reverse Holofoil,Bulbasaur - 045/100,EX Crystal Guardians,up,watch,30-day trend; held 2+ days,154.48,-1.0
-2026-11-10,86908,Holofoil,Lugia,Secret Wonders,up,watch,30-day trend; listings agree; held 2+ days,436.20,0.8
-2026-11-10,84573,1st Edition,Dark Charizard (21),Team Rocket,down,watch,1-day jump; held 2+ days,166.89,0.5
-2026-11-10,611492,1st Edition Holofoil,Ampharos (Delta Species),Offense and Defense of the Furthest Ends,up,watch,30-day trend; listings agree; held 2+ days,100.50,-0.5
-2026-11-10,42445,Holofoil,Mewtwo,Base Set 2,up,watch,30-day trend,158.36,0.4
-2026-11-10,239090,Normal,Gyarados - 32/97 (Prerelease),Nintendo Promos,up,watch,30-day trend; held 2+ days,375.75,-0.1
-2026-11-10,90099,Unlimited Holofoil,Typhlosion (18),Neo Genesis,up,watch,30-day trend; held 2+ days,189.61,-0.0
+2026-11-10,88443,Reverse Holofoil,Psyduck (Delta Species),EX Holon Phantoms,up,high,7-day move; 1-day jump; 30-day trend; top 2% of movers; listings agree; 2 sales same way,316.99,52.6
+2026-11-10,713258,Holofoil,Espeon ex - 108 (30th Celebration),ME: Mega Evolution Promo,down,high,7-day move; 30-day trend; selling more often; bottom 2% of movers; fell below $100; listings agree,74.92,-43.8
+2026-11-10,713259,Holofoil,Umbreon ex - 110 (30th Celebration),ME: Mega Evolution Promo,down,high,7-day move; 30-day trend; selling more often; bottom 2% of movers; fell below $100; listings agree,89.75,-41.9
+2026-11-10,86638,Reverse Holofoil,Larvitar - 063/109,EX Team Rocket Returns,up,high,7-day move; selling more often; top 2% of movers; broke above $100; 2 sales same way,121.46,37.3
+2026-11-10,84211,Holofoil,Charmander - 113/112,EX FireRed & LeafGreen,up,medium,7-day move; top 2% of movers; broke above $100; listings agree; thinly traded,328.99,314.0
+2026-11-10,88997,Reverse Holofoil,Scyther (106),Aquapolis,up,medium,7-day move; top 2% of movers; broke above $100; listings agree; thinly traded,229.99,165.4
+2026-11-10,87878,Reverse Holofoil,Onix,Aquapolis,up,medium,7-day move; top 2% of movers; broke above $100; listings agree; thinly traded,199.00,165.4
+2026-11-10,83897,Holofoil,Blastoise,Plasma Storm,up,medium,7-day move; top 2% of movers; listings agree,1099.98,130.6
+2026-11-10,86445,Reverse Holofoil,Kingdra,EX Team Rocket Returns,up,medium,7-day move; top 2% of movers; broke above $100; listings agree,170.00,106.1
+2026-11-10,83444,Reverse Holofoil,Abra,Skyridge,up,medium,7-day move; 30-day trend; top 2% of movers; 2 sales same way; thinly traded,300.00,106.1
+2026-11-10,86452,Holofoil,Kingdra ex (Delta Species),EX Dragon Frontiers,up,medium,7-day move; top 2% of movers; listings agree,280.99,98.8
+2026-11-10,88635,Reverse Holofoil,Rayquaza - 026/110 (Delta Species),EX Holon Phantoms,down,medium,7-day move; bottom 2% of movers; listings agree; thinly traded,395.08,-67.1
+2026-11-10,84626,Reverse Holofoil,Dark Magneton,EX Team Rocket Returns,up,medium,7-day move; top 2% of movers; broke above $100; listings agree,145.48,62.2
+2026-11-10,90436,Reverse Holofoil,Vulpix,Expedition,up,medium,7-day move; top 2% of movers; broke above $100; listings agree; thinly traded,119.99,42.0
+2026-11-10,84596,Reverse Holofoil,Dark Flaaffy,EX Team Rocket Returns,up,medium,7-day move; top 2% of movers; broke above $100; listings agree; thinly traded,129.99,36.8
+2026-11-10,107017,1st Edition,Pidgeotto,Base Set (Shadowless),up,medium,7-day move; broke above $100; listings agree,107.87,30.6
+2026-11-10,86655,Holofoil,Latias (Delta Species),EX Delta Species,up,medium,7-day move; 30-day trend; listings agree,178.55,29.3
+2026-11-10,89388,Holofoil,Snorlax,EX FireRed & LeafGreen,up,medium,7-day move; 2 sales same way,254.73,29.1
+2026-11-10,90126,Holofoil,Tyranitar ex (Delta Species),EX Dragon Frontiers,up,medium,7-day move; selling more often; 3 sales same way,259.98,28.9
+2026-11-10,691978,Holofoil,Rayquaza - 003/017 (2006),Blister Exclusives,up,medium,30-day trend; selling more often; listings agree,205.89,20.7
+2026-11-10,476064,Holofoil,Zacian V - 138/202,Prize Pack Series Cards,up,medium,7-day move; 2 sales same way,119.67,16.1
+2026-11-10,46478,Reverse Holofoil,Togepi,Southern Islands,up,medium,7-day move; 30-day trend; selling more often; 2 sales same way,329.23,15.1
+2026-11-10,90145,Holofoil,Umbreon,Undaunted,up,medium,30-day trend; selling more often; 2 sales same way,171.71,12.9
+2026-11-10,83904,Reverse Holofoil,Blaziken - 15/109,EX Ruby and Sapphire,up,watch,selling more often; top 2% of movers; broke above $100,125.81,101.2
+2026-11-10,97705,Holofoil,Latias - HGSS10 (Cracked Ice Holo),HGSS Promos,up,watch,30-day trend; top 2% of movers; 2 sales same way,461.41,54.1
+2026-11-10,86453,Holofoil,Kingler (15),Expedition,up,watch,30-day trend,128.98,26.0
+2026-11-10,276377,Normal,Pikachu (Pokemon Day Stamped),POP Series 6,up,watch,30-day trend,249.99,25.0
+2026-11-10,84189,Holofoil,Charizard,Secret Wonders,up,watch,30-day trend,208.66,24.2
+2026-11-10,84811,Holofoil,Dialga G LV.X,Platinum,up,watch,30-day trend,392.45,22.9
+2026-11-10,87405,Holofoil,Mew (Prime),Triumphant,up,watch,selling more often; 2 sales same way,500.00,22.0
+2026-11-10,88875,1st Edition,Sabrina's Gengar,Gym Challenge,up,watch,30-day trend; listings agree; 2 sales same way,670.00,20.8
+2026-11-10,88109,Holofoil,Pikachu (Delta Species) - 035 (Value Pack),Nintendo Promos,up,watch,1-day jump; listings agree; thinly traded,308.86,18.3
+2026-11-10,90634,Reverse Holofoil,Wooper,EX Team Rocket Returns,up,watch,30-day trend; broke above $100; listings agree; thinly traded,116.55,16.7
+2026-11-10,86656,Holofoil,Latias - 011/110 (Delta Species),EX Holon Phantoms,down,watch,selling more often; bottom 2% of movers; fell below $100; 3 sales same way,85.00,-16.2
+2026-11-10,84898,Reverse Holofoil,Dragonair,Expedition,up,watch,selling more often; broke above $100; listings agree; 3 sales same way,115.00,15.0
+2026-11-10,709267,Holofoil,Mega Rayquaza ex - 113/076,M6: Storm Emeralda,down,watch,30-day trend; bottom 2% of movers; listings agree; 2 sales same way,596.96,-14.4
+2026-11-10,83458,Holofoil,Absol G Lv.X,Supreme Victors,up,watch,30-day trend; listings agree; 2 sales same way,133.64,14.4
+2026-11-10,86741,1st Edition,Light Jolteon,Neo Destiny,down,watch,30-day trend; bottom 2% of movers,239.15,-13.0
+2026-11-10,86861,1st Edition Holofoil,Lt. Surge's Raichu,Gym Challenge,up,watch,30-day trend; listings agree; thinly traded,233.00,10.6
+2026-11-10,88785,Holofoil,Rocket's Raikou ex,EX Deoxys,up,watch,30-day trend; listings agree; thinly traded,308.74,10.3
+2026-11-10,489291,Holofoil,Charizard VSTAR - 018/172,Prize Pack Series Cards,up,watch,30-day trend,550.00,10.1
+2026-11-10,89675,Reverse Holofoil,Swampert - 13/109,EX Ruby and Sapphire,up,watch,30-day trend; listings agree; thinly traded,112.39,9.3
+2026-11-10,201346,Holofoil,Red & Blue (Full Art),SM - Cosmic Eclipse,down,watch,selling more often; 2 sales same way,219.94,-8.0
+2026-11-10,85623,Holofoil,Garchomp,Supreme Victors,up,watch,selling more often; 2 sales same way,110.76,7.3
+2026-11-10,87434,Holofoil,Mewtwo LV.X - DP28,Diamond and Pearl Promos,down,watch,30-day trend,346.97,-6.9
+2026-11-10,86132,Holofoil,Ho-Oh Legend (Bottom),HeartGold SoulSilver,up,watch,30-day trend; listings agree,225.25,5.7
+2026-11-10,85060,Holofoil,Dustox ex,EX Legend Maker,down,watch,30-day trend; listings agree,120.00,-5.7
+2026-11-10,145870,Holofoil,Psychic Energy - 92/95 (Play! Pokemon Promo),League & Championship Cards,up,watch,selling more often; 2 sales same way,164.92,5.3
+2026-11-10,201651,Holofoil,Rosa (Full Art),SM - Cosmic Eclipse,down,watch,selling more often; 3 sales same way,251.83,-4.7
+2026-11-10,647207,Holofoil,Mega Gardevoir ex - 092/063,m1S: Mega Symphonia,down,watch,selling more often; listings agree; 2 sales same way,230.63,-4.1
+2026-11-10,566544,Holofoil,Charizard ex - 201/165,SV2a: Pokemon Card 151,down,watch,selling more often; listings agree,377.24,-2.9
+2026-11-10,88875,Unlimited,Sabrina's Gengar,Gym Challenge,down,watch,selling more often; listings agree,212.52,-2.7
+2026-11-10,165781,Holofoil,Lucario GX (Secret),SM - Forbidden Light,up,watch,selling more often; listings agree; 2 sales same way,135.72,2.3
+2026-11-10,665921,Holofoil,Mega Dragonite ex - 250/193,M2a: High Class Pack: MEGA Dream ex,down,watch,selling more often; listings agree,184.45,-2.2
+2026-11-10,205163,Holofoil,Charizard & Braixen GX - SM230,SM Promos,down,watch,selling more often,100.21,-2.1
+2026-11-10,153234,Holofoil,Charizard - 1/99 (Cracked Ice Holo),Miscellaneous Cards & Products,up,watch,30-day trend,144.75,2.1
+2026-11-10,149472,Holofoil,Fire Energy - 89/95 (Play! Pokemon),League & Championship Cards,up,watch,selling more often; listings agree,104.90,1.7
+2026-11-10,728062,Holofoil,Mega Rayquaza ex - 141/103,ME06: Delta Reign,down,watch,selling more often,257.19,
+2026-11-10,674436,Holofoil,Mega Zygarde ex - 117/080,M3: Nihil Zero,down,watch,selling more often,166.81,-1.0
+2026-11-10,84032,Reverse Holofoil,Bulbasaur - 045/100,EX Crystal Guardians,up,watch,30-day trend,154.48,-1.0
+2026-11-10,183963,Holofoil,Magikarp & Wailord GX (Full Art),SM - Team Up,up,watch,selling more often; listings agree,137.27,0.9
+2026-11-10,728061,Holofoil,Mega Rayquaza ex - 138/103,ME06: Delta Reign,up,watch,selling more often,308.69,
+2026-11-10,531251,Reverse Holofoil,Charmander - 004/165 (EBGames Exclusive),Miscellaneous Cards & Products,up,watch,selling more often,359.21,-0.7
+2026-11-10,185985,Holofoil,Pikachu & Zekrom GX,SM Promos,up,watch,selling more often; listings agree,220.18,-0.7
+2026-11-10,189293,Holofoil,Red's Challenge (Full Art),SM - Unbroken Bonds,up,watch,selling more often; listings agree,155.16,0.6
+2026-11-10,239090,Normal,Gyarados - 32/97 (Prerelease),Nintendo Promos,up,watch,30-day trend,375.75,-0.1
 2026-11-10,45122,1st Edition Holofoil,Snorlax (11),Jungle,up,watch,30-day trend,567.79,0.0
-2026-11-10,83446,Reverse Holofoil,Abra,Legendary Collection,down,watch,30-day trend,141.32,0.0
-2026-11-10,83468,Reverse Holofoil,Aerodactyl,EX Legend Maker,up,watch,30-day trend,199.98,0.0
-2026-11-10,83514,Reverse Holofoil,Altaria,EX Deoxys,up,watch,30-day trend,179.95,0.0
-2026-11-10,83545,Holofoil,Ampharos (Prime),HeartGold SoulSilver,up,watch,30-day trend,104.53,0.0
-2026-11-10,83605,Holofoil,Arceus LV.X - DP53,Diamond and Pearl Promos,down,watch,30-day trend,115.00,0.0
-2026-11-10,83606,Holofoil,Arceus LV.X - DP56,Diamond and Pearl Promos,up,watch,30-day trend,292.55,0.0
+2026-11-10,83468,Reverse Holofoil,Aerodactyl,EX Legend Maker,up,watch,30-day trend; thinly traded,199.98,0.0
 2026-11-10,83657,Holofoil,Articuno EX (Team Plasma) (132 Full Art),Plasma Storm,up,watch,30-day trend,644.98,0.0
-2026-11-10,83768,Reverse Holofoil,Beedrill,Legendary Collection,up,watch,30-day trend,299.99,0.0
-2026-11-10,83858,1st Edition Holofoil,Blaine (17),Gym Challenge,up,watch,30-day trend,116.99,0.0
 2026-11-10,83891,Holofoil,Blastoise,POP Series 3,up,watch,30-day trend,300.00,0.0
-2026-11-10,84027,Reverse Holofoil,Bulbasaur (95),Expedition,up,watch,30-day trend,600.00,0.0
-2026-11-10,84144,Reverse Holofoil,Celebi,Skyridge,up,watch,30-day trend,775.00,0.0
-2026-11-10,84150,Holofoil,Celebi ex,EX Unseen Forces,up,watch,30-day trend,999.99,0.0
-2026-11-10,84166,Holofoil,Chandelure (Secret),Next Destinies,down,watch,30-day trend,166.25,0.0
 2026-11-10,84184,Reverse Holofoil,Charizard (39),Expedition,up,watch,30-day trend,540.00,0.0
-2026-11-10,84187,Holofoil,Charizard,EX Dragon,up,watch,30-day trend,1499.99,0.0
-2026-11-10,84189,Reverse Holofoil,Charizard,Secret Wonders,up,watch,30-day trend,441.24,0.0
-2026-11-10,84220,Reverse Holofoil,Charmander (Delta Species),EX Crystal Guardians,up,watch,30-day trend,202.18,0.0
-2026-11-10,84353,Reverse Holofoil,Clefairy,Expedition,up,watch,30-day trend,105.62,0.0
-2026-11-10,84365,Reverse Holofoil,Cleffa,EX Unseen Forces,up,watch,30-day trend,325.00,0.0
-2026-11-10,84399,Normal,Combusken - 009 (e-League) [Winner],Nintendo Promos,up,watch,30-day trend,247.75,0.0
-2026-11-10,84531,Reverse Holofoil,Cubone,EX FireRed & LeafGreen,down,watch,30-day trend,194.98,0.0
-2026-11-10,84579,1st Edition Holofoil,Dark Donphan,Neo Destiny,up,watch,30-day trend,216.98,0.0
-2026-11-10,84585,Reverse Holofoil,Dark Dragonite,Legendary Collection,up,watch,30-day trend,1300.00,0.0
-2026-11-10,84587,Reverse Holofoil,Dark Dragonite,EX Team Rocket Returns,up,watch,30-day trend,1150.00,0.0
-2026-11-10,84591,Reverse Holofoil,Dark Electrode,EX Team Rocket Returns,up,watch,30-day trend,139.99,0.0
-2026-11-10,84594,1st Edition Holofoil,Dark Feraligatr,Neo Destiny,down,watch,30-day trend,250.00,0.0
-2026-11-10,84608,Reverse Holofoil,Dark Gyarados,EX Team Rocket Returns,down,watch,30-day trend,207.45,0.0
-2026-11-10,84627,Reverse Holofoil,Dark Marowak,EX Team Rocket Returns,up,watch,30-day trend,250.00,0.0
-2026-11-10,84658,Reverse Holofoil,Dark Steelix,EX Team Rocket Returns,up,watch,30-day trend,299.99,0.0
-2026-11-10,84661,Reverse Holofoil,Dark Tyranitar - 019/109,EX Team Rocket Returns,down,watch,30-day trend,153.53,
-2026-11-10,84760,Holofoil,Deoxys (Delta Species - Attack Forme),EX Holon Phantoms,up,watch,30-day trend,112.24,0.0
-2026-11-10,84762,Holofoil,Deoxys (Delta Species - Defense Forme),EX Holon Phantoms,up,watch,30-day trend,144.68,0.0
-2026-11-10,84764,Reverse Holofoil,Deoxys (Delta Species - Normal Forme),EX Holon Phantoms,up,watch,30-day trend,550.00,0.0
-2026-11-10,84767,Holofoil,Deoxys (Delta Species - Speed Forme),EX Holon Phantoms,up,watch,30-day trend,144.37,0.0
-2026-11-10,84770,Holofoil,Deoxys ex (Attack Forme),EX Deoxys,up,watch,30-day trend,400.00,0.0
-2026-11-10,84773,Holofoil,Deoxys ex (Speed Forme),EX Emerald,up,watch,30-day trend,306.66,0.0
-2026-11-10,84785,Holofoil,Dewgong (H6),Skyridge,up,watch,30-day trend,449.99,0.0
-2026-11-10,84788,Reverse Holofoil,Dewgong,Legendary Collection,up,watch,30-day trend,200.00,0.0
-2026-11-10,84835,Reverse Holofoil,Ditto - 038/113 (Mr. Mime),EX Delta Species,up,watch,30-day trend,140.04,0.0
-2026-11-10,84839,Reverse Holofoil,Ditto (Geodude),EX Delta Species,down,watch,30-day trend,117.33,0.0
-2026-11-10,84918,Holofoil,Dragonite ex,EX Dragon,down,watch,30-day trend,233.20,0.0
-2026-11-10,84954,Normal,Drifloon,POP Series 6,up,watch,30-day trend,117.00,0.0
-2026-11-10,85032,Holofoil,Dusclops ex,EX Emerald,up,watch,30-day trend,125.95,0.0
-2026-11-10,85151,Reverse Holofoil,Electrode,Legendary Collection,up,watch,30-day trend,104.80,0.0
-2026-11-10,85233,Reverse Holofoil,Energy Retrieval,Legendary Collection,up,watch,30-day trend,129.98,0.0
-2026-11-10,85267,Holofoil,Entei (H8),Aquapolis,up,watch,30-day trend,639.00,0.0
-2026-11-10,85275,Holofoil,Entei Star,EX Unseen Forces,up,watch,30-day trend,1600.00,0.0
-2026-11-10,85278,Holofoil,Entei ex,EX Team Magma vs Team Aqua,up,watch,30-day trend,499.95,0.0
-2026-11-10,85320,1st Edition,Espeon (20),Neo Discovery,up,watch,30-day trend,169.99,0.0
-2026-11-10,85322,Reverse Holofoil,Espeon,Undaunted,up,watch,30-day trend,104.41,0.0
-2026-11-10,85395,Reverse Holofoil,Fearow,Legendary Collection,up,watch,30-day trend,172.50,0.0
-2026-11-10,85505,Holofoil,Flareon ex,EX Delta Species,up,watch,30-day trend,464.42,0.0
-2026-11-10,85626,Holofoil,Garchomp (120 Secret Rare),Plasma Freeze,up,watch,30-day trend,900.00,0.0
+2026-11-10,84773,Holofoil,Deoxys ex (Speed Forme),EX Emerald,up,watch,30-day trend; thinly traded,306.66,0.0
+2026-11-10,85322,Reverse Holofoil,Espeon,Undaunted,up,watch,30-day trend; thinly traded,104.41,0.0
 2026-11-10,85630,Holofoil,Garchomp C LV.X - DP46,Diamond and Pearl Promos,up,watch,30-day trend,133.35,0.0
-2026-11-10,85648,Reverse Holofoil,Gastly,Legendary Collection,up,watch,30-day trend,483.00,0.0
-2026-11-10,85675,Reverse Holofoil,Gengar,Diamond and Pearl,up,watch,30-day trend,364.49,0.0
-2026-11-10,85678,Reverse Holofoil,Gengar (17),Arceus,down,watch,1-day jump; 30-day trend,169.98,0.0
-2026-11-10,85825,Reverse Holofoil,Golem,Skyridge,down,watch,30-day trend,300.00,0.0
-2026-11-10,85922,Reverse Holofoil,Groudon - 005/106,EX Emerald,up,watch,30-day trend,299.99,0.0
-2026-11-10,85924,Reverse Holofoil,Groudon,Legends Awakened,up,watch,30-day trend,139.99,0.0
-2026-11-10,85927,Holofoil,Groudon Star,EX Delta Species,up,watch,30-day trend,3000.00,0.0
+2026-11-10,85927,Holofoil,Groudon Star,EX Delta Species,up,watch,30-day trend; thinly traded,3000.00,0.0
 2026-11-10,85931,Holofoil,Groudon ex - 038 (EX Collector's Tins),Nintendo Promos,up,watch,30-day trend,410.50,0.0
-2026-11-10,85999,Holofoil,Gyarados,Call of Legends,up,watch,30-day trend,132.18,0.0
-2026-11-10,85999,Reverse Holofoil,Gyarados,Call of Legends,up,watch,30-day trend,142.50,0.0
 2026-11-10,86002,Holofoil,Gyarados (Delta Species),EX Holon Phantoms,up,watch,30-day trend,316.32,0.0
-2026-11-10,86022,Reverse Holofoil,Haunter,Legendary Collection,up,watch,30-day trend,400.00,0.0
-2026-11-10,86075,Holofoil,Here Comes Team Rocket!,EX Team Rocket Returns,down,watch,30-day trend,191.33,0.0
-2026-11-10,86125,Holofoil,Ho-Oh - HGSS01,HGSS Promos,up,watch,30-day trend,123.13,0.0
-2026-11-10,86198,Unlimited Holofoil,Houndoom,Neo Revelation,up,watch,30-day trend,564.99,0.0
-2026-11-10,86216,1st Edition Holofoil,Houndour (5),Neo Discovery,up,watch,30-day trend,350.00,0.0
-2026-11-10,86220,Reverse Holofoil,Houndour,Skyridge,up,watch,30-day trend,125.00,0.0
-2026-11-10,86258,Reverse Holofoil,Igglybuff,Skyridge,up,watch,30-day trend,250.00,0.0
-2026-11-10,86332,Holofoil,Jirachi ex,EX Crystal Guardians,up,watch,30-day trend,256.66,0.0
-2026-11-10,86352,Holofoil,Jolteon ex,EX Delta Species,down,watch,30-day trend,204.16,0.0
-2026-11-10,86409,Reverse Holofoil,Kakuna,Legendary Collection,up,watch,30-day trend,150.00,0.0
-2026-11-10,86448,Holofoil,Kingdra (Prime),Unleashed,up,watch,30-day trend,107.82,0.0
-2026-11-10,86450,Reverse Holofoil,Kingdra (Delta Species),EX Holon Phantoms,up,watch,30-day trend,399.99,0.0
-2026-11-10,86560,Holofoil,Kyogre EX (104 Full Art),Dark Explorers,up,watch,30-day trend,504.48,0.0
-2026-11-10,86676,Holofoil,Latios EX (113 Full Art),Plasma Freeze,up,watch,30-day trend,327.50,0.0
-2026-11-10,86895,Reverse Holofoil,Ludicolo,EX Sandstorm,up,watch,30-day trend,130.99,0.0
-2026-11-10,86907,Normal,Lugia,POP Series 5,up,watch,30-day trend,357.41,0.0
+2026-11-10,86220,Reverse Holofoil,Houndour,Skyridge,up,watch,30-day trend; thinly traded,125.00,0.0
 2026-11-10,86908,Reverse Holofoil,Lugia,Secret Wonders,up,watch,30-day trend,232.26,0.0
-2026-11-10,86910,Holofoil,Lugia,Call of Legends,up,watch,30-day trend,268.48,0.0
-2026-11-10,86913,Holofoil,Lugia EX (Team Plasma),Plasma Storm,up,watch,30-day trend,159.40,0.0
-2026-11-10,86916,Holofoil,Lugia EX (Team Plasma) (134 Full Art),Plasma Storm,up,watch,30-day trend,2717.32,0.0
-2026-11-10,86957,Reverse Holofoil,Machamp,Legendary Collection,up,watch,30-day trend,312.50,0.0
-2026-11-10,86960,Reverse Holofoil,Machamp (16),Expedition,up,watch,30-day trend,120.74,0.0
-2026-11-10,87027,Reverse Holofoil,Magikarp,EX Team Rocket Returns,up,watch,30-day trend,599.99,0.0
-2026-11-10,87028,Reverse Holofoil,Magikarp,EX Deoxys,up,watch,30-day trend,259.99,0.0
-2026-11-10,87045,Reverse Holofoil,Magmar,EX Team Rocket Returns,up,watch,30-day trend,139.99,0.0
-2026-11-10,87226,Normal,Marowak,EX FireRed & LeafGreen,up,watch,30-day trend,133.74,0.0
-2026-11-10,87311,Reverse Holofoil,Meowth,Legendary Collection,up,watch,30-day trend,227.00,0.0
-2026-11-10,87337,Reverse Holofoil,Metagross,EX Deoxys,up,watch,30-day trend,141.11,0.0
-2026-11-10,87347,Holofoil,Metagross ex,EX Power Keepers,up,watch,30-day trend,137.34,0.0
-2026-11-10,87400,Holofoil,Mew,EX Holon Phantoms,up,watch,30-day trend,499.99,0.0
-2026-11-10,87407,Normal,Mew (Delta Species),POP Series 5,up,watch,30-day trend,418.33,0.0
-2026-11-10,87422,Reverse Holofoil,Mewtwo,Legends Awakened,up,watch,30-day trend,322.67,0.0
-2026-11-10,87428,Holofoil,Mewtwo ex,EX Ruby and Sapphire,up,watch,30-day trend,746.79,0.0
-2026-11-10,87482,Reverse Holofoil,Minun,EX Hidden Legends,up,watch,30-day trend,125.28,0.0
-2026-11-10,87668,Reverse Holofoil,Mysterious Fossil,Legendary Collection,up,watch,30-day trend,225.00,0.0
-2026-11-10,87769,Reverse Holofoil,Ninetales,EX Hidden Legends,up,watch,30-day trend,100.00,0.0
-2026-11-10,87864,Reverse Holofoil,Omastar,Skyridge,up,watch,30-day trend,124.00,0.0
-2026-11-10,87976,Reverse Holofoil,Pelipper,EX Deoxys,up,watch,30-day trend,149.00,0.0
-2026-11-10,88046,Reverse Holofoil,Pidgey,Legendary Collection,down,watch,30-day trend,103.20,0.0
-2026-11-10,88077,Reverse Holofoil,Pikachu,EX Team Magma vs Team Aqua,up,watch,30-day trend,198.84,0.0
-2026-11-10,88085,Holofoil,Pikachu,POP Series 5,up,watch,30-day trend,434.85,0.0
-2026-11-10,88248,Reverse Holofoil,Politoed (25),Skyridge,up,watch,30-day trend,179.99,0.0
-2026-11-10,88252,Holofoil,Politoed ex,EX Unseen Forces,up,watch,30-day trend,330.00,0.0
+2026-11-10,86916,Holofoil,Lugia EX (Team Plasma) (134 Full Art),Plasma Storm,up,watch,30-day trend; thinly traded,2717.32,0.0
 2026-11-10,88291,Reverse Holofoil,Ponyta (Shiny),Arceus,up,watch,30-day trend,278.58,0.0
-2026-11-10,88322,1st Edition Holofoil,Porygon2,Neo Revelation,up,watch,30-day trend,170.00,0.0
-2026-11-10,88359,Reverse Holofoil,Primeape,Aquapolis,up,watch,30-day trend,200.00,0.0
-2026-11-10,88484,Reverse Holofoil,Quilava,EX Unseen Forces,up,watch,30-day trend,101.00,0.0
-2026-11-10,88501,Holofoil,Raichu (25),Expedition,down,watch,30-day trend,174.99,0.0
-2026-11-10,88612,Reverse Holofoil,Rattata,Legendary Collection,up,watch,30-day trend,229.98,0.0
-2026-11-10,88624,Holofoil,Rayquaza,POP Series 1,up,watch,30-day trend,317.43,0.0
-2026-11-10,88624,Normal,Rayquaza,POP Series 1,up,watch,30-day trend,435.42,0.0
+2026-11-10,88322,1st Edition Holofoil,Porygon2,Neo Revelation,up,watch,30-day trend; thinly traded,170.00,0.0
 2026-11-10,88633,Reverse Holofoil,Rayquaza (Delta Species),EX Delta Species,up,watch,30-day trend,333.10,0.0
 2026-11-10,88635,Normal,Rayquaza - 026/110 (Delta Species),EX Holon Phantoms,up,watch,30-day trend,107.17,0.0
-2026-11-10,88639,Holofoil,Rayquaza C,Supreme Victors,up,watch,30-day trend,268.13,0.0
-2026-11-10,88659,Holofoil,Regice ex,EX Hidden Legends,up,watch,30-day trend,303.75,0.0
-2026-11-10,88760,Holofoil,Riolu - BW33 (Cosmos Holo),Black and White Promos,up,watch,30-day trend,189.97,0.0
-2026-11-10,88768,Holofoil,Rocket's Articuno ex,EX Team Rocket Returns,up,watch,30-day trend,450.00,0.0
-2026-11-10,88775,Reverse Holofoil,Rocket's Meowth,EX Team Rocket Returns,down,watch,30-day trend,249.99,0.0
-2026-11-10,88782,Holofoil,Rocket's Moltres ex,EX Team Rocket Returns,up,watch,30-day trend,999.99,0.0
-2026-11-10,88799,Reverse Holofoil,Rocket's Wobbuffet,EX Team Rocket Returns,up,watch,30-day trend,199.99,0.0
-2026-11-10,88860,1st Edition Holofoil,Sabrina (20),Gym Challenge,up,watch,30-day trend,186.64,0.0
 2026-11-10,88874,1st Edition Holofoil,Sabrina's Gengar,Gym Heroes,up,watch,30-day trend,1249.50,0.0
-2026-11-10,88902,Reverse Holofoil,Salamence (Delta Species),EX Delta Species,up,watch,30-day trend,300.00,0.0
-2026-11-10,88944,Reverse Holofoil,Sceptile - 11/109,EX Ruby and Sapphire,up,watch,30-day trend,104.99,0.0
-2026-11-10,88954,Holofoil,Sceptile ex,EX Team Magma vs Team Aqua,up,watch,30-day trend,494.99,0.0
 2026-11-10,88964,Holofoil,Scizor (Prime),Undaunted,up,watch,30-day trend,170.75,0.0
-2026-11-10,89011,Reverse Holofoil,Seadra,Legendary Collection,up,watch,30-day trend,190.69,0.0
-2026-11-10,89162,Unlimited Holofoil,Shining Celebi,Neo Destiny,up,watch,30-day trend,749.99,0.0
-2026-11-10,89234,Holofoil,Skarmory (27),Expedition,up,watch,30-day trend,195.94,0.0
-2026-11-10,89304,Reverse Holofoil,Slowbro,EX FireRed & LeafGreen,up,watch,30-day trend,140.00,0.0
-2026-11-10,89324,Reverse Holofoil,Slowpoke,Legendary Collection,up,watch,30-day trend,1000.00,0.0
-2026-11-10,89325,Reverse Holofoil,Slowpoke,Aquapolis,up,watch,30-day trend,449.99,0.0
-2026-11-10,89395,Reverse Holofoil,Snorlax (Delta Species),EX Dragon Frontiers,up,watch,30-day trend,999.97,0.0
-2026-11-10,89540,Reverse Holofoil,Starmie - 015/113 (Delta Species),EX Delta Species,up,watch,30-day trend,112.75,0.0
-2026-11-10,89555,1st Edition Holofoil,Steelix,Neo Genesis,up,watch,30-day trend,198.50,0.0
-2026-11-10,89566,Holofoil,Steelix ex,EX Unseen Forces,up,watch,30-day trend,256.52,0.0
-2026-11-10,89613,Reverse Holofoil,Sunflora,Skyridge,up,watch,30-day trend,129.99,0.0
-2026-11-10,89759,Reverse Holofoil,Tauros,Legendary Collection,up,watch,30-day trend,154.69,0.0
-2026-11-10,89874,Reverse Holofoil,Tentacruel,Legendary Collection,up,watch,30-day trend,183.54,0.0
-2026-11-10,89920,Holofoil,Time-Space Distortion,Mysterious Treasures,up,watch,30-day trend,100.06,0.0
-2026-11-10,89942,Holofoil,Togetic,EX Team Rocket Returns,up,watch,30-day trend,209.89,0.0
-2026-11-10,89956,Reverse Holofoil,Torchic,EX Holon Phantoms,up,watch,30-day trend,141.96,0.0
-2026-11-10,90098,1st Edition Holofoil,Typhlosion (17),Neo Genesis,down,watch,30-day trend,330.99,0.0
 2026-11-10,90107,Holofoil,Typhlosion (Prime),HeartGold SoulSilver,up,watch,30-day trend,128.99,0.0
 2026-11-10,90124,Holofoil,Tyranitar ex (Holo),POP Series 1,down,watch,30-day trend,195.18,0.0
-2026-11-10,90142,1st Edition,Umbreon (32),Neo Discovery,up,watch,30-day trend,399.99,0.0
-2026-11-10,90147,Reverse Holofoil,Umbreon,Call of Legends,up,watch,30-day trend,200.99,0.0
-2026-11-10,90196,1st Edition Holofoil,Unown [A] (14),Neo Discovery,up,watch,30-day trend,117.49,0.0
-2026-11-10,90410,Reverse Holofoil,Voltorb,Legendary Collection,up,watch,30-day trend,178.00,0.0
-2026-11-10,90443,Reverse Holofoil,Vulpix (Shiny),Platinum,up,watch,30-day trend,227.56,0.0
-2026-11-10,90575,Reverse Holofoil,Whiscash,EX Deoxys,up,watch,30-day trend,118.57,0.0
-2026-11-10,90596,Reverse Holofoil,Wigglytuff,EX FireRed & LeafGreen,up,watch,30-day trend,169.06,0.0
 2026-11-10,90603,Holofoil,Wigglytuff ex,EX Hidden Legends,up,watch,30-day trend,188.88,0.0
-2026-11-10,96413,Holofoil,Kingdra - XY39 (Prerelease),XY Promos,up,watch,30-day trend,108.75,0.0
-2026-11-10,96867,Holofoil,Victory Cup - BW30 (Battle Road Spring 2013) [2nd Place],Black and White Promos,up,watch,30-day trend,122.75,0.0
-2026-11-10,97706,Holofoil,Latios - HGSS11 (Cracked Ice Holo),HGSS Promos,up,watch,30-day trend,500.72,0.0
-2026-11-10,97806,Holofoil,Armaldo ex (Holo),POP Series 1,up,watch,30-day trend,150.00,0.0
-2026-11-10,102803,Holofoil,Gyarados - XY60 (Prerelease) [Staff],XY Promos,up,watch,30-day trend,2000.00,0.0
-2026-11-10,106996,Unlimited Holofoil,Alakazam,Base Set (Shadowless),up,watch,30-day trend,490.98,0.0
-2026-11-10,107000,1st Edition Holofoil,Gyarados,Base Set (Shadowless),up,watch,30-day trend,200.00,0.0
-2026-11-10,154997,Holofoil,Clefable (Prerelease),WoTC Promo,down,watch,30-day trend,248.33,0.0
-2026-11-10,164206,Reverse Holofoil,Garchomp - 5/147 (Championship Promo),League & Championship Cards,up,watch,30-day trend,199.99,0.0
-2026-11-10,167078,Reverse Holofoil,Electabuzz - 1 [Winner],Best of Promos,up,watch,30-day trend,198.00,0.0
-2026-11-10,168252,Reverse Holofoil,Cynthia - 119/156 (Regional Championships) [Staff],League & Championship Cards,up,watch,30-day trend,350.00,
-2026-11-10,178982,Holofoil,Lugia GX (Secret),SM - Lost Thunder,up,watch,30-day trend,370.07,0.0
-2026-11-10,209542,Reverse Holofoil,Blaziken - 14/111 (National Championships),League & Championship Cards,up,watch,30-day trend,199.00,0.0
-2026-11-10,211510,Holofoil,Primal Groudon EX - 97/98,Jumbo Cards,up,watch,30-day trend,120.00,0.0
-2026-11-10,215154,Holofoil,Pikachu (Italian),Pikachu World Collection Promos,up,watch,30-day trend,120.00,0.0
-2026-11-10,220118,Holofoil,Raichu - 40/99 (Cosmos Holo),Blister Exclusives,down,watch,30-day trend,123.80,0.0
+2026-11-10,96413,Holofoil,Kingdra - XY39 (Prerelease),XY Promos,up,watch,30-day trend; thinly traded,108.75,0.0
 2026-11-10,221172,Normal,Dratini - 91/146 (City Championships) [Staff],League & Championship Cards,up,watch,30-day trend,199.99,0.0
-2026-11-10,221174,Normal,Dragonair - 52/146 (State Championships),League & Championship Cards,down,watch,30-day trend,121.67,0.0
-2026-11-10,221177,Holofoil,Leafeon - 17/90 (Prerelease),HGSS Promos,up,watch,30-day trend,149.99,0.0
-2026-11-10,231414,Reverse Holofoil,Espeon - 48/108 (National Championships),League & Championship Cards,up,watch,30-day trend,212.00,0.0
-2026-11-10,476021,Holofoil,Espeon VMAX - 065/203,Prize Pack Series Cards,up,watch,30-day trend,227.99,0.0
-2026-11-10,489694,Holofoil,Glaceon - 23/116 (City Championships) [Staff],League & Championship Cards,up,watch,30-day trend,303.21,0.0
-2026-11-10,528683,Reverse Holofoil,Geeta - 188/197 (Regional Championships) [Staff],League & Championship Cards,up,watch,30-day trend,129.55,0.0
-2026-11-10,569026,Holofoil,Tyranitar V - 077/070,S5I: Single Strike Master,up,watch,30-day trend,299.98,0.0
-2026-11-10,576031,1st Edition Holofoil,Pichu - 114/128,Base Expansion Pack,up,watch,30-day trend,450.00,0.0
-2026-11-10,603033,1st Edition,Pokemon Enterprise - 099/093,EX Battle Boost,up,watch,30-day trend,100.00,0.0
-2026-11-10,606043,1st Edition Holofoil,Mew - 017/036,CP5: Mythical & Legendary Dream Shine Collection,up,watch,30-day trend,539.99,0.0
-2026-11-10,606047,1st Edition Holofoil,Shaymin - 004/036,CP5: Mythical & Legendary Dream Shine Collection,down,watch,30-day trend,100.00,0.0
-2026-11-10,608118,1st Edition Holofoil,Charizard,Intense Fight in the Destroyed Sky,up,watch,30-day trend,300.00,0.0
-2026-11-10,608599,Holofoil,Suicune - 060/L-P,L-P: Legends Promos,up,watch,30-day trend,124.99,0.0
-2026-11-10,612446,Unlimited Holofoil,Slowbro,Flight of Legends,up,watch,30-day trend,200.00,0.0
-2026-11-10,613443,Normal,Lugia - 038/PCG-P,PCG-P Promotional cards,up,watch,30-day trend,125.00,0.0
-2026-11-10,622613,Normal,Morty's Gengar,Pokemon VS,up,watch,30-day trend,680.00,0.0
-2026-11-10,614610,Normal,Bulbasaur - 18,Intro Pack (Bulbasaur),up,watch,30-day trend,159.95,0.0
-2026-11-10,89529,Reverse Holofoil,Starmie (30),Skyridge,up,watch,30-day trend,150.00,0.0
-2026-11-10,233307,Normal,Shinx - 98/130 (City Championships) [Staff],Nintendo Promos,up,watch,30-day trend,223.33,0.0
-2026-11-10,240133,Holofoil,Flygon - 15/97 (Pokemon League) [Winner],League & Championship Cards,up,watch,30-day trend,330.00,0.0
-2026-11-10,602003,Normal,Mega Tokyo's Pikachu - 098/XY-P,XY-P: XY Promos,down,watch,30-day trend,299.99,0.0
-2026-11-10,88437,Reverse Holofoil,Psyduck,EX Team Rocket Returns,up,watch,30-day trend,299.99,0.0
+2026-11-10,489694,Holofoil,Glaceon - 23/116 (City Championships) [Staff],League & Championship Cards,up,watch,30-day trend; thinly traded,303.21,0.0

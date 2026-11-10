@@ -101,7 +101,7 @@ footer{margin-top:18px;color:var(--text-3);font-size:12px}
   <div class="bar" role="search">
     <input type="search" id="q" placeholder="Search card or set" aria-label="Search card or set">
     <select id="dir" aria-label="Direction"><option value="">Up and down</option><option value="up">Rising</option><option value="down">Falling</option></select>
-    <select id="sev" aria-label="Severity"><option value="">Any severity</option><option value="high">High</option><option value="medium">Medium</option><option value="watch">Watch</option></select>
+    <select id="sev" aria-label="Severity"><option value="hm">High and medium</option><option value="high">High</option><option value="medium">Medium</option><option value="watch">Watch list</option><option value="">All, including watch</option></select>
     <select id="lang" aria-label="Language"><option value="">All languages</option></select>
     <label>$ <input type="number" id="pmin" min="0" step="50" placeholder="min" aria-label="Minimum price"></label>
     <label>to <input type="number" id="pmax" min="0" step="50" placeholder="max" aria-label="Maximum price"></label>
@@ -117,7 +117,9 @@ const D = /*__DATA__*/null;
 const M = D.meta, $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = x => x == null ? "–" : "$" + x.toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
-const U = D.universe.map(a => ({id:a[0],n:a[1],s:a[2],no:a[3],pr:a[4],lang:a[5],p:a[6],c1:a[7],c7:a[8],c30:a[9],z:a[10],pc:a[11]}));
+const U = D.universe.map(a => ({id:a[0],n:a[1],s:a[2],no:a[3],pr:a[4],lang:a[5],p:a[6],c1:a[7],c7:a[8],c30:a[9],z:a[10],pc:a[11],sd:a[12]}));
+const alertIds = new Set(D.alerts.map(a => a.id + "|" + a.pr));
+for (const c of D.gainers.concat(D.losers)) if (alertIds.has(c.id + "|" + c.pr)) c.tags = ["also in alerts"].concat(c.tags.filter(t => t !== "thinly traded"));
 const LISTS = {alerts: D.alerts, gainers: D.gainers, losers: D.losers, all: U};
 const state = {tab: "alerts", sort: {}, shown: 100};
 
@@ -186,9 +188,11 @@ function columns(tab){
   cols.push({h: "7 days", k: "c7", num: 1, f: c => delta(c.c7)});
   cols.push({h: "30 days", k: "c30", num: 1, f: c => delta(c.c30)});
   cols.push({h: "vs. normal", k: "az", num: 1, f: zCell, t: "How many times bigger the 7-day move is than this card's usual 7-day swing"});
+  cols.push({h: "Sale days", k: "sd", num: 1, f: c => c.sd == null ? '<span class="muted">–</span>' : String(c.sd), t: "Days in the last 30 on which the price changed: a rough count of days with sales"});
   cols.push({h: "Rank", k: "pc", num: 1, f: pcCell, t: "Percentile of the 7-day move among all tracked cards today (100 = biggest gain, 0 = biggest drop)"});
   if (detail) cols.push({h: "60-day price", f: c => spark(c.sp)});
   if (tab === "alerts") cols.push({h: "Why", f: whyCell});
+  if (tab === "gainers" || tab === "losers") cols.push({h: "Notes", f: whyCell});
   if (detail && M.volume_enabled) cols.push({h: "Sales volume", f: volCell});
   cols.push({h: "Check", f: links});
   return cols;
@@ -208,7 +212,7 @@ function filtered(tab){
     if (!isNaN(pmin) && c.p < pmin) return false;
     if (!isNaN(pmax) && c.p > pmax) return false;
     if (dir){ const d = c.dir || (c.c7 == null ? "" : c.c7 >= 0 ? "up" : "down"); if (d !== dir) return false; }
-    if (tab === "alerts"){ if (sev && c.sev !== sev) return false; if (newonly && !c.new) return false; }
+    if (tab === "alerts"){ if (sev === "hm" ? c.sev === "watch" : sev && c.sev !== sev) return false; if (newonly && !c.new) return false; }
     return true;
   });
   const s = state.sort[tab];
@@ -224,7 +228,8 @@ function renderTable(tab){
   if (!rows.length){
     const msg = LISTS[tab].length ? "No cards match these filters." :
       tab === "alerts" ? (M.days_of_history < 8 ? "No alerts yet. Seven-day signals begin once 8 days of prices are stored." : "No cards crossed an alert threshold today.") : "Nothing to show yet.";
-    return `<div class="empty">${msg}</div>`;
+    const watchHint = tab === "alerts" && $("#sev").value === "hm" && M.watch ? ` ${M.watch} card${M.watch === 1 ? " is" : "s are"} on the watch list.` : "";
+    return `<div class="empty">${msg}${watchHint}</div>`;
   }
   const cap = tab === "all" ? state.shown : rows.length;
   const head = cols.map(c => `<th${c.num ? ' class="num"' : ""}${c.k ? ` data-k="${c.k}" tabindex="0" role="button"` : ""}${c.t ? ` title="${esc(c.t)}"` : ""}>${c.h}${s && s.k === c.k ? `<span class="ar">${s.dir > 0 ? "↑" : "↓"}</span>` : ""}</th>`).join("");
@@ -247,30 +252,33 @@ function renderHow(){
   const T = M.thresholds;
   return `<div class="how">
   <h3>What this tracks</h3>
-  <p>Every Pokémon card printing whose TCGplayer market price (a rolling average of recent completed sales) is between $${M.band.min.toLocaleString()} and $${M.band.max.toLocaleString()}. Prices are saved once a day, so every change shown here is measured against this tracker's own stored history.</p>
+  <p>Every Pokémon card printing whose TCGplayer market price is between $${M.band.min.toLocaleString()} and $${M.band.max.toLocaleString()}. TCGplayer's market price is built from recent completed sales, so it only changes when a card sells. For most cards in this range that is a few times a month, which makes the price a step line: flat, then a jump on the next sale.</p>
+  <p>Because one sale can be an outlier (a graded copy sold as raw, a misprint, a typo), a price move only counts when something else backs it up: the lowest or median listing price moved the same way, or two or more separate sales moved the same way. A single sale that moves the price 3× or more while listings stay put is ignored.</p>
   <h3>When a card is flagged</h3>
   <ul>
-    <li><b>7-day move:</b> price changed at least ${T.move_7d_pct}% and $${T.min_dollar_move} in a week, and the move is at least ${T.z_7d_min}× that card's normal weekly swing. Cards without enough history need ${T.move_7d_pct_no_history}%.</li>
-    <li><b>1-day jump:</b> at least ${T.move_1d_pct}% and $${T.min_dollar_move} since the previous day, and at least ${T.z_1d_min}× the card's normal daily swing.</li>
-    <li><b>30-day trend:</b> at least ${T.move_30d_pct}% over a month.</li>
-    <li><b>Volume spike:</b> sales over the last 3 days at least ${T.volume_spike_ratio}× the card's usual pace (only for cards with volume data).</li>
+    <li><b>7-day move:</b> price changed at least ${T.move_7d_pct}% and $${T.min_dollar_move} in a week, confirmed as above, and at least ${T.z_7d_min}× the card's normal weekly swing. Cards with too little history need ${T.move_7d_pct_no_history}%.</li>
+    <li><b>1-day jump:</b> at least ${T.move_1d_pct}% and $${T.min_dollar_move} since the previous day, with listings moving the same way.</li>
+    <li><b>30-day trend:</b> at least ${T.move_30d_pct}% over a month, built from two or more sales and matched by listings.</li>
+    <li><b>Selling more often:</b> the price changed on at least ${T.activity_min_sale_days} of the last 7 days, and at a pace at least ${T.activity_spike_ratio}× faster than the three weeks before. This is a free, rough stand-in for a rise in sales volume.</li>
+    <li><b>Volume spike:</b> units sold over the last 3 days at least ${T.volume_spike_ratio}× the card's usual pace (only for cards with sales-volume data).</li>
   </ul>
-  <p><b>High</b> means a 7-day move of ${T.high_severity_7d_pct}%+ that either held for two or more days or is matched by listing prices moving the same way. <b>Medium</b> is any other 7-day move or volume spike. <b>Watch</b> is a 1-day or 30-day signal alone.</p>
+  <p><b>High:</b> a 7-day move of ${T.high_severity_7d_pct}%+ that is backed by both listings and repeat sales, or that comes with a jump in sales activity. <b>Medium:</b> any other 7-day move, a volume spike, or more frequent sales together with a price signal. <b>Watch list:</b> a 30-day trend, a 1-day jump, or more frequent sales on their own. The watch list is hidden by default; pick it in the severity filter.</p>
   <h3>Reading the columns</h3>
   <ul>
-    <li><b>vs. normal:</b> the 7-day move divided by the card's own typical 7-day swing. A steady card reaches 4× on a smaller percentage move than a jumpy card does; either way the move is equally unusual for that card.</li>
+    <li><b>vs. normal:</b> the 7-day move divided by this card's usual 7-day swing, from the size of its typical price change per sale and how often it sells. 3× means the move is three times bigger than usual for that card.</li>
     <li><b>Rank:</b> percentile of the 7-day move across all tracked cards today. 99 is among the top 1% of gainers, 1 among the steepest drops.</li>
-    <li><b>Check:</b> one-click searches for eBay sold listings, live eBay listings and Facebook Marketplace, to confirm the move and compare asking prices.</li>
+    <li><b>Sale days:</b> days in the last 30 on which the price changed. Cards with 2 or fewer are tagged "thinly traded": treat their moves with more caution.</li>
+    <li><b>Check:</b> one-click searches for eBay sold listings, live eBay listings and Facebook Marketplace, to confirm a move and compare asking prices.</li>
   </ul>
   <h3>Limits</h3>
   <ul>
     <li>Prices are for ungraded (raw) cards on TCGplayer. Graded slabs and eBay-only sales are not in the price feed; use the eBay sold link to confirm.</li>
-    <li>Thinly traded cards can jump on a single sale. "Listings agree" and "held 2+ days" tags mark the sturdier signals.</li>
+    <li>"Sale days" counts days with a price change, not units sold: two sales at the same price on one day count once.</li>
     <li>Facebook Marketplace publishes no sold prices and no data feed, so it is a search link, not a data source.</li>
   </ul></div>`;
 }
 function render(){
-  const tabs = [["alerts", "Alerts", D.alerts.length], ["gainers", "Top gainers", null], ["losers", "Top decliners", null],
+  const tabs = [["alerts", "Alerts", M.alerts], ["gainers", "Top gainers", null], ["losers", "Top decliners", null],
                 ["all", "All tracked cards", U.length], ["history", "Alert history", null], ["how", "How it works", null]];
   $("#tabs").innerHTML = tabs.map(([k, l, c]) => `<button role="tab" aria-selected="${state.tab === k}" data-tab="${k}">${l}${c != null ? `<span class="c">${c.toLocaleString()}</span>` : ""}</button>`).join("");
   $("#panel").innerHTML = state.tab === "history" ? renderHistory() : state.tab === "how" ? renderHow() : renderTable(state.tab);
@@ -281,7 +289,7 @@ function init(){
   const med = M.median_c7;
   $("#tiles").innerHTML = [
     ["Cards tracked", M.universe.toLocaleString(), `priced $${M.band.min.toLocaleString()}–$${M.band.max.toLocaleString()}`],
-    ["Alerts today", M.alerts.toLocaleString(), `${M.new_alerts} new today`],
+    ["Alerts today", M.alerts.toLocaleString(), `${M.new_alerts} new · ${M.watch} more on the watch list`],
     ["Rising", M.up.toLocaleString(), "alerts with price up"],
     ["Falling", M.down.toLocaleString(), "alerts with price down"],
     ["Market median, 7 days", med == null ? "–" : (med > 0 ? "+" : med < 0 ? "−" : "") + Math.abs(med).toFixed(1) + "%", "typical card's weekly change"],

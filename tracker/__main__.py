@@ -166,7 +166,7 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
     report.write_markdown(root, payload)
     m = payload["meta"]
     print(f"{today_iso}: {m['universe']} cards in band, {m['alerts']} alerts "
-          f"({m['new_alerts']} new; {m['up']} up, {m['down']} down).")
+          f"({m['new_alerts']} new; {m['up']} up, {m['down']} down), {m['watch']} on watch.")
     return payload
 
 

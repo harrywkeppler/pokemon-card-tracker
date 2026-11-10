@@ -15,22 +15,31 @@ def _r(x, nd=1):
 
 
 def _spark(obs: list, today: int) -> list:
-    return [[o - today, round(m, 2)] for o, m, _ in obs if today - o <= SPARK_DAYS]
+    return [[o[0] - today, round(o[1], 2)] for o in obs if today - o[0] <= SPARK_DAYS]
 
 
 def _detail(r: dict, catalog: dict, series: dict, today: int, cats: dict, ebay: dict) -> dict:
     m = catalog.get(str(r["pid"]), {})
     v = r.get("vol") or None
+    tags = r.get("tags")
+    if tags is None:  # not an alert: add the caution notes that still apply
+        tags = []
+        if r.get("outlier7"):
+            tags.append("one outlier sale: listings didn't move")
+        elif r.get("c7") is not None and not (r.get("agree7") or r.get("same7", 0) >= 2):
+            tags.append("unconfirmed: one sale, listings flat")
+        if r.get("sales30") is not None and r["sales30"] <= 2:
+            tags.append("thinly traded")
     return {
         "id": r["pid"], "pr": r["printing"],
         "n": m.get("name") or f"Product {r['pid']}", "s": m.get("group", ""),
         "no": m.get("number", ""), "ra": m.get("rarity", ""),
         "lang": cats.get(str(m.get("cat")), ""), "url": m.get("url", ""),
         "p": round(r["price"], 2), "c1": _r(r["c1"]), "c7": _r(r["c7"]), "c30": _r(r["c30"]),
-        "z": _r(r["z7"]), "pc": _r(r["pctile"]),
+        "z": _r(r["z7"]), "pc": _r(r["pctile"]), "sd": r.get("sales30"), "sd7": r.get("sales7"),
         "sp": _spark(series.get((r["pid"], r["printing"]), []), today),
         "sev": r.get("severity"), "dir": r.get("direction"),
-        "why": r.get("reasons", []), "tags": r.get("tags", []), "new": r.get("is_new", False),
+        "why": r.get("reasons", []), "tags": tags, "new": r.get("is_new", False),
         "vol": None if not v else {"r": _r(v["recent_3d"], 0), "b": _r(v["baseline_3d"], 1),
                                    "x": _r(v["ratio"], 1), "spike": v["spike"]},
         "ebay": ebay.get(r["pid"]) or ebay.get(str(r["pid"])),
@@ -49,6 +58,7 @@ def build_payload(cfg, result, catalog, series, today_iso, alert_log, n_dates, e
     gain = sorted(movers, key=lambda r: -r["c7"])[:40]
     lose = sorted(movers, key=lambda r: r["c7"])[:40]
     alerts = result["alerts"]
+    main = [a for a in alerts if a["severity"] in ("high", "medium")]
 
     universe = []
     for r in sorted(in_band, key=lambda r: -r["price"]):
@@ -56,7 +66,7 @@ def build_payload(cfg, result, catalog, series, today_iso, alert_log, n_dates, e
         universe.append([r["pid"], m.get("name") or f"Product {r['pid']}", m.get("group", ""),
                          m.get("number", ""), r["printing"], cats.get(str(m.get("cat")), ""),
                          round(r["price"], 2), _r(r["c1"]), _r(r["c7"]), _r(r["c30"]),
-                         _r(r["z7"]), _r(r["pctile"])])
+                         _r(r["z7"]), _r(r["pctile"]), r.get("sales30")])
 
     recent_days = sorted({a["date"] for a in alert_log})[-30:]
     history = [a for a in alert_log if a["date"] in recent_days][-600:]
@@ -68,9 +78,10 @@ def build_payload(cfg, result, catalog, series, today_iso, alert_log, n_dates, e
             "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
             "band": cfg["band"], "thresholds": cfg["thresholds"],
             "universe": len(in_band), "days_of_history": n_dates,
-            "alerts": len(alerts), "new_alerts": sum(1 for a in alerts if a["is_new"]),
-            "up": sum(1 for a in alerts if a["direction"] == "up"),
-            "down": sum(1 for a in alerts if a["direction"] == "down"),
+            "alerts": len(main), "watch": len(alerts) - len(main),
+            "new_alerts": sum(1 for a in main if a["is_new"]),
+            "up": sum(1 for a in main if a["direction"] == "up"),
+            "down": sum(1 for a in main if a["direction"] == "down"),
             "median_c7": _r(statistics.median(r["c7"] for r in with7), 2) if with7 else None,
             "volume_enabled": any(r.get("vol") for r in rows),
             "languages": sorted(set(cats.values())),
@@ -107,7 +118,8 @@ def write_markdown(root: str, payload: dict) -> str:
     L = [f"# Pokémon card tracker: {m['date']}", "",
          f"{m['universe']:,} card printings priced ${m['band']['min']:,}–${m['band']['max']:,} "
          f"(TCGplayer market price) · {m['days_of_history']} days of history · "
-         f"**{m['alerts']} alerts** ({m['new_alerts']} new, {m['up']} up, {m['down']} down)", ""]
+         f"**{m['alerts']} alerts** ({m['new_alerts']} new, {m['up']} up, {m['down']} down) "
+         f"· {m['watch']} on the watch list", ""]
     if m["days_of_history"] < 8:
         L += ["> Still building history: 7-day signals start once 8 days of prices are stored.", ""]
 
@@ -126,7 +138,8 @@ def write_markdown(root: str, payload: dict) -> str:
                      f"{_fmt_pct(a['c1'])} | {_fmt_pct(a['c7'])} | {_fmt_pct(a['c30'])} | {why} |")
         L.append("")
 
-    table("Alerts", payload["alerts"], 60)
+    table("Alerts (high and medium)", [a for a in payload["alerts"] if a["sev"] != "watch"], 60)
+    table("Watch list", [a for a in payload["alerts"] if a["sev"] == "watch"], 40)
     table("Biggest 7-day gainers", payload["gainers"], 15)
     table("Biggest 7-day decliners", payload["losers"], 15)
     L += ["", f"_Generated {m['generated']}. Prices: TCGplayer via tcgcsv.com._", ""]

@@ -1,14 +1,18 @@
 {
-  "band": { "min": 100, "max": 5000 },
-  "categories": { "3": "English", "85": "Japanese" },
+  "band": {
+    "min": 100,
+    "max": 5000
+  },
+  "categories": {
+    "3": "English",
+    "85": "Japanese"
+  },
   "cards_only": true,
-
   "store_floor": 25,
   "store_ceiling": 10000,
   "backfill_days": 45,
   "history_days": 90,
   "keep_daily_days": 180,
-
   "thresholds": {
     "move_7d_pct": 15,
     "move_7d_pct_no_history": 25,
@@ -19,16 +23,16 @@
     "min_dollar_move": 15,
     "high_severity_7d_pct": 30,
     "percentile_tail": 2,
+    "activity_spike_ratio": 3.0,
+    "activity_min_sale_days": 3,
     "volume_spike_ratio": 3.0,
     "volume_min_sales": 5
   },
-
   "volume_api": {
     "daily_credits": 100,
     "credits_per_card": 4,
     "recent_alert_days": 14
   },
-
   "tcgcsv_base_url": "https://tcgcsv.com",
   "ppt_base_url": "https://www.pokemonpricetracker.com/api/v2",
   "user_agent": "PokemonCardTracker/1.0",
