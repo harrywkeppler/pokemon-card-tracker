@@ -43,6 +43,18 @@
     ],
     "min_sales_30d": 1
   },
+  "excel_view": {
+    "min_price": 100,
+    "max_price": 5000,
+    "min_move_pct": 15,
+    "direction": "Any",
+    "min_signal": "Any",
+    "language": "Any",
+    "min_sale_days": 0,
+    "require_graded": "No",
+    "require_condition": "No",
+    "sort_by": "Biggest move"
+  },
   "volume_api": {
     "daily_credits": 100,
     "credits_per_card": 3,

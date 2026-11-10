@@ -377,7 +377,8 @@ class EndToEnd(unittest.TestCase):
         self.assertNotIn("/*__DATA__*/null", html)
         from openpyxl import load_workbook
         wb = load_workbook(os.path.join(self.repo, "out", "tracker.xlsx"))
-        self.assertEqual(wb.sheetnames[0], "Alerts")
+        self.assertEqual(wb.sheetnames[:3], ["My view", "Settings", "Alerts"])
+        self.assertEqual(wb["_view"].sheet_state, "hidden")
         tables = {t for ws in wb.worksheets for t in ws.tables}
         self.assertEqual(tables, {"tblAlerts", "tblWatch", "tblGainers", "tblDecliners",
                                   "tblCards", "tblHistory", "tblPrices"})
@@ -386,6 +387,31 @@ class EndToEnd(unittest.TestCase):
         self.assertNotIn(101010, ids)
         log = Store(self.repo).read_alert_log()
         self.assertEqual(len({r["date"] for r in log}), 2)
+
+    def test_workbook_view_formulas_point_at_the_right_columns(self):
+        from openpyxl import load_workbook
+        from openpyxl.utils import get_column_letter
+        wb = load_workbook(os.path.join(self.repo, "out", "tracker.xlsx"))
+        cards = wb["All cards"]
+        letter = {c.value: get_column_letter(c.column) for c in cards[1]}
+        last = cards.max_row
+        # settings: named cells with defaults from config.json
+        names = {n: wb.defined_names[n].attr_text for n in wb.defined_names}
+        self.assertEqual(names["setMinPrice"], "Settings!$B$4")
+        self.assertEqual(wb["Settings"]["B4"].value, 100)
+        self.assertEqual(wb["Settings"]["B6"].value, 0.15)
+        # hidden helper: one row per card, reading that row's own price and signal
+        hv = wb["_view"]
+        self.assertEqual(hv.max_row, last)
+        f = hv[f"A{last}"].value
+        self.assertIn(f"'All cards'!{letter['Price']}{last}>=setMinPrice", f)
+        self.assertIn(f"'All cards'!{letter['Signal']}{last}", f)
+        self.assertIn(f"N('All cards'!{letter['Graded sales count']}{last})>0", f)
+        # My view row 1 picks the largest sort key and reads the Card column
+        vw = wb["My view"]
+        self.assertEqual(vw["A5"].value, f'=IFERROR(MATCH(LARGE(_view!$B$2:$B${last},1),_view!$B$2:$B${last},0),"")')
+        self.assertIn(f"'All cards'!${letter['Card']}$2:${letter['Card']}${last}", vw["C5"].value)
+        self.assertEqual([c.value for c in vw[4]][2:4], ["Card", "Set"])
 
 
 def ppt_card(grades, conditions=None, used=None):
