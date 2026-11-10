@@ -173,6 +173,7 @@ function volCell(c){
   let out = [];
   if (c.vol) out.push(`${c.vol.r} sold / 3d` + (c.vol.x != null ? ` · ${c.vol.x}× usual` : ""));
   if (c.ebay && c.ebay.sales_velocity != null) out.push(`graded eBay: ${c.ebay.sales_velocity}/day`);
+  if (c.gr && c.gr.length) out.push(c.gr.map(g => `${g[0]} ${g[1] == null ? "–" : money(g[1])} (${g[2]})`).join(" · "));
   return out.length ? out.map(esc).join("<br>") : '<span class="muted">–</span>';
 }
 const zCell = c => c.z == null ? '<span class="muted" title="Not enough history yet">–</span>' : `${Math.abs(c.z).toFixed(1)}×`;
@@ -286,6 +287,7 @@ function render(){
 function init(){
   $("#subtitle").textContent = `TCGplayer market prices · cards $${M.band.min.toLocaleString()}–$${M.band.max.toLocaleString()} · prices as of ${M.date} · ${M.days_of_history} days of history`;
   if (M.days_of_history < 8) $("#note").innerHTML = `<p class="note">Still building history (${M.days_of_history} day${M.days_of_history === 1 ? "" : "s"} stored). One-day jumps show now; 7-day signals start at 8 days.</p>`;
+  if (M.graded_note) $("#note").insertAdjacentHTML("beforeend", `<p class="note">${esc(M.graded_note)}</p>`);
   const med = M.median_c7;
   $("#tiles").innerHTML = [
     ["Cards tracked", M.universe.toLocaleString(), `priced $${M.band.min.toLocaleString()}–$${M.band.max.toLocaleString()}`],

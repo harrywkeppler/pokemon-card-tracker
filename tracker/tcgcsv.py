@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -106,6 +107,8 @@ def parse_ts(raw: str) -> datetime:
                 tz = sep + rest
                 break
         raw = f"{head}.{frac[:6]}{tz}"
+    # "+0000" -> "+00:00": Python before 3.11 only reads offsets with a colon
+    raw = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", raw)
     dt = datetime.fromisoformat(raw)
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)

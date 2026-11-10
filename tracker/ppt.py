@@ -16,6 +16,7 @@ from __future__ import annotations
 import csv
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -86,6 +87,49 @@ def _dig_ebay(card: dict) -> dict | None:
     return out
 
 
+# salesByGrade keys: grader + whole grade, "_5" for a half grade (psa10, psa8_5, cgc9_5)
+GRADE_KEY = re.compile(r"^([a-z]+)(\d+)(?:_(5))?$")
+
+
+def parse_grade(key: str):
+    """'psa8_5' -> ('psa', 8.5); None for a key that is not a grader and grade."""
+    m = GRADE_KEY.match(str(key).strip().lower())
+    if not m:
+        return None
+    return m.group(1), int(m.group(2)) + (0.5 if m.group(3) else 0.0)
+
+
+def graded_in_range(ebay_entry: dict | None, gcfg: dict) -> list[dict]:
+    """The chosen grader's grades within [min_grade, max_grade] that have sales, best first."""
+    out = []
+    for key, st in ((ebay_entry or {}).get("grades") or {}).items():
+        g = parse_grade(key)
+        if not g or g[0] != gcfg["grader"].lower() \
+                or not (gcfg["min_grade"] <= g[1] <= gcfg["max_grade"]):
+            continue
+        try:
+            count = int(st.get("count") or 0)
+        except (TypeError, ValueError):
+            count = 0
+        if count <= 0:
+            continue
+        out.append({"label": f"{g[0].upper()} {g[1]:g}", "grade": g[1], "count": count,
+                    "median": st.get("median"), "market_7d": st.get("market_7d")})
+    return sorted(out, key=lambda x: -x["grade"])
+
+
+def apply_graded_filter(alerts: list[dict], ebay: dict, gcfg: dict) -> list[dict]:
+    """Keep alerts whose card has enough graded sales in range, with them attached
+    as a["graded"]. A card the lookup budget did not reach today has no data and
+    is left out: it cannot be shown to have graded sales."""
+    kept = []
+    for a in alerts:
+        g = graded_in_range(ebay.get(a["pid"]) or ebay.get(str(a["pid"])), gcfg)
+        if g and sum(x["count"] for x in g) >= int(gcfg.get("min_sales", 1)):
+            kept.append({**a, "graded": g})
+    return kept
+
+
 def enrich(cfg: dict, store, targets: list[int], api_key: str, today_iso: str) -> dict:
     """Fetch volume + graded eBay stats for `targets`. Returns {pid: ebay stats}."""
     base = cfg["ppt_base_url"].rstrip("/")
@@ -129,7 +173,7 @@ def enrich(cfg: dict, store, targets: list[int], api_key: str, today_iso: str) -
                 break
         except ValueError:
             pass
-        time.sleep(1.1)  # 60 calls a minute
+        time.sleep(cfg["volume_api"].get("pause_seconds", 1.1))  # 60 calls a minute
     store.write_volume(vol)
     store._save(f"ebay/{today_iso}.json", {str(k): v for k, v in ebay.items()})
     return ebay

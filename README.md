@@ -90,6 +90,28 @@ number in the card's TCGplayer link).
 On a paid plan, raise `volume_api.daily_credits` in `config.json` to cover more
 cards.
 
+### Only cards with PSA 7–10 sales
+
+With the key set, alerts are limited to cards that have graded sales (eBay and
+Fanatics Collect) at **PSA 7 to 10**, and each alert shows the median sale price
+per grade, for example `PSA 10 $1,250 (3) · PSA 9 $480 (5)`. The prices that
+trigger an alert are still raw TCGplayer prices; the graded sales decide which
+cards are kept.
+
+| `graded_filter` setting | Default | Meaning |
+|---|---|---|
+| `enabled` | true | false shows every alert, graded sales or not |
+| `grader` | `psa` | `psa`, `cgc`, `bgs`, `sgc` or `tag` |
+| `min_grade` / `max_grade` | 7 / 10 | grade range, half grades included |
+| `min_sales` | 1 | graded sales in range a card needs |
+
+Each card looked up costs 3 credits, so the free plan (100 credits a day) checks
+about 33 cards: the watchlist first, then the strongest alerts. An alert on a card
+not checked that day is left out, since it cannot be shown to have PSA 7–10 sales.
+The Pro plan (20,000 credits a day; set `volume_api.daily_credits` to 20000)
+checks every tracked card. Without the key the filter cannot run: the report says
+so and shows all alerts.
+
 > This part was written from the provider's published field list and has not
 > been run against the live service. The first reply is saved to
 > `data/debug/ppt_last_response.json` so the parsing can be checked.

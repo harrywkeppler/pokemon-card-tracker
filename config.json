@@ -28,9 +28,16 @@
     "volume_spike_ratio": 3.0,
     "volume_min_sales": 5
   },
+  "graded_filter": {
+    "enabled": true,
+    "grader": "psa",
+    "min_grade": 7,
+    "max_grade": 10,
+    "min_sales": 1
+  },
   "volume_api": {
     "daily_credits": 100,
-    "credits_per_card": 4,
+    "credits_per_card": 3,
     "recent_alert_days": 14
   },
   "tcgcsv_base_url": "https://tcgcsv.com",
