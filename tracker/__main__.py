@@ -151,6 +151,38 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
         ebay = ppt.enrich(cfg, store, targets, key, today_iso)
         result = signals.compute(cfg, series, catalog, today_iso, store.read_volume(), log)
 
+    # Graded-sales (PSA 7-10) and condition filters: both come from the same
+    # PokemonPriceTracker lookup, so a card must pass every filter that is on.
+    notes, missing = [], []
+    gcfg = cfg.get("graded_filter") or {}
+    ccfg = cfg.get("condition_filter") or {}
+    if key:
+        result["alerts"] = ppt.attach_conditions(result["alerts"], ebay)
+    if gcfg.get("enabled"):
+        label = f"{gcfg['grader'].upper()} {gcfg['min_grade']:g}–{gcfg['max_grade']:g}"
+        if key:
+            before = len(result["alerts"])
+            result["alerts"] = ppt.apply_graded_filter(result["alerts"], ebay, gcfg)
+            notes.append(f"Only cards with {label} sales: {len(result['alerts'])} of "
+                         f"{before} alerts kept ({len(ebay)} cards checked today).")
+        else:
+            missing.append(label)
+    if ccfg.get("enabled"):
+        names = " or ".join(ccfg.get("conditions") or [])
+        if key:
+            before = len(result["alerts"])
+            result["alerts"] = ppt.apply_condition_filter(result["alerts"], ccfg)
+            notes.append(f"Only cards sold in {names} in the last 30 days: "
+                         f"{len(result['alerts'])} of {before} kept.")
+        else:
+            missing.append("condition")
+    if missing:
+        notes.append(f"The {' and '.join(missing)} filter{'s need' if len(missing) > 1 else ' needs'} "
+                     f"PPT_API_KEY, which is not set: showing raw-card alerts unfiltered.")
+    filter_note = " ".join(notes) or None
+    if filter_note:
+        print(filter_note)
+
     for a in result["alerts"]:
         m = catalog.get(str(a["pid"]), {})
         log.append({"date": today_iso, "productId": str(a["pid"]), "printing": a["printing"],
@@ -161,7 +193,8 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
                     "chg_7d_pct": "" if a["c7"] is None else f"{a['c7']:.1f}"})
     store.write_alert_log(log)
 
-    payload = report.build_payload(cfg, result, catalog, series, today_iso, log, len(used), ebay)
+    payload = report.build_payload(cfg, result, catalog, series, today_iso, log, len(used), ebay,
+                                   filter_note)
     report.write_dashboard(root, payload)
     report.write_markdown(root, payload)
     try:

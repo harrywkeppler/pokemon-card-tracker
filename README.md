@@ -90,6 +90,46 @@ number in the card's TCGplayer link).
 On a paid plan, raise `volume_api.daily_credits` in `config.json` to cover more
 cards.
 
+### Only cards with PSA 7–10 sales
+
+With the key set, alerts are limited to cards that have graded sales (eBay and
+Fanatics Collect) at **PSA 7 to 10**, and each alert shows the median sale price
+per grade, for example `PSA 10 $1,250 (3) · PSA 9 $480 (5)`. The prices that
+trigger an alert are still raw TCGplayer prices; the graded sales decide which
+cards are kept.
+
+| `graded_filter` setting | Default | Meaning |
+|---|---|---|
+| `enabled` | true | false shows every alert, graded sales or not |
+| `grader` | `psa` | `psa`, `cgc`, `bgs`, `sgc` or `tag` |
+| `min_grade` / `max_grade` | 7 / 10 | grade range, half grades included |
+| `min_sales` | 1 | graded sales in range a card needs |
+
+Each card looked up costs 3 credits, so the free plan (100 credits a day) checks
+about 33 cards: the watchlist first, then the strongest alerts. An alert on a card
+not checked that day is left out, since it cannot be shown to have PSA 7–10 sales.
+The Pro plan (20,000 credits a day; set `volume_api.daily_credits` to 20000)
+checks every tracked card. Without the key the filter cannot run: the report says
+so and shows all alerts.
+
+### Card condition
+
+The same lookup brings TCGplayer prices and sales per condition, at no extra
+credits. Each checked alert shows them, latest price with copies sold in the
+last 30 days, for example `NM $410 (12) · LP $340 (3) · MP $250 (1)`, and is
+tagged `price is for Lightly Played, not Near Mint` when TCGplayer's market
+price (the one the tracker follows) comes from a lower condition because no
+Near Mint copy is listed. That tag is worth reading before trusting a move.
+
+| `condition_filter` setting | Default | Meaning |
+|---|---|---|
+| `enabled` | true | false shows condition prices but drops nothing |
+| `conditions` | Near Mint, Lightly Played | conditions that count: `Near Mint`, `Lightly Played`, `Moderately Played`, `Heavily Played`, `Damaged` |
+| `min_sales_30d` | 1 | copies sold in those conditions over 30 days a card needs |
+
+With both filters on, a card must have PSA 7–10 sales **and** raw sales in
+the chosen conditions. Without the key neither filter can run.
+
 > This part was written from the provider's published field list and has not
 > been run against the live service. The first reply is saved to
 > `data/debug/ppt_last_response.json` so the parsing can be checked.

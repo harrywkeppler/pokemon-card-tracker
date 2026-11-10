@@ -28,9 +28,36 @@
     "volume_spike_ratio": 3.0,
     "volume_min_sales": 5
   },
+  "graded_filter": {
+    "enabled": true,
+    "grader": "psa",
+    "min_grade": 7,
+    "max_grade": 10,
+    "min_sales": 1
+  },
+  "condition_filter": {
+    "enabled": true,
+    "conditions": [
+      "Near Mint",
+      "Lightly Played"
+    ],
+    "min_sales_30d": 1
+  },
+  "excel_view": {
+    "min_price": 100,
+    "max_price": 5000,
+    "min_move_pct": 15,
+    "direction": "Any",
+    "min_signal": "Any",
+    "language": "Any",
+    "min_sale_days": 0,
+    "require_graded": "No",
+    "require_condition": "No",
+    "sort_by": "Biggest move"
+  },
   "volume_api": {
     "daily_credits": 100,
-    "credits_per_card": 4,
+    "credits_per_card": 3,
     "recent_alert_days": 14
   },
   "tcgcsv_base_url": "https://tcgcsv.com",
