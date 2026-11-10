@@ -11,7 +11,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tracker import ppt  # noqa: E402
-from tracker.report import graded_text  # noqa: E402
+from tracker.report import condition_text, graded_text  # noqa: E402
 
 PSA_7_10 = {"enabled": True, "grader": "psa", "min_grade": 7, "max_grade": 10, "min_sales": 1}
 
@@ -72,6 +72,57 @@ class ApplyFilter(unittest.TestCase):
     def test_report_text(self):
         self.assertEqual(graded_text([["PSA 10", 1200.0, 2], ["PSA 9", None, 4]]),
                          "PSA 10 $1,200 (2) · PSA 9 – (4)")
+
+
+def card_reply(variants: dict, used: dict = None) -> dict:
+    """{printing: {condition: [(date, price, volume), ...]}} in the API's shape."""
+    reply = {"priceHistory": {"variants": {
+        pr: {c: {"history": [{"date": d, "price": p, "volume": v} for d, p, v in pts]}
+             for c, pts in conds.items()} for pr, conds in variants.items()}}}
+    if used:
+        reply["prices"] = {"variants": {pr: {"conditionUsed": c} for pr, c in used.items()}}
+    return reply
+
+
+class Conditions(unittest.TestCase):
+    def test_dig_latest_price_and_30_day_sales(self):
+        got = ppt._dig_conditions(card_reply({"Holofoil": {
+            "Near Mint": [("2026-11-10", 410.0, 2), ("2026-11-08", 400.0, None), ("2026-11-09", 405.0, 1)],
+            "Damaged": [("2026-11-09", None, None)],               # nothing to show
+        }}, used={"Holofoil": "Near Mint"}))
+        self.assertEqual(got, {"Holofoil": {"used": "Near Mint",
+                                            "by": {"Near Mint": {"price": 410.0, "sales_30d": 3.0}}}})
+
+    def test_odd_replies(self):
+        self.assertEqual(ppt._dig_conditions({}), {})
+        self.assertEqual(ppt._dig_conditions({"priceHistory": {"variants": {"Holofoil": "x"}}}), {})
+
+    def test_printing_match_order_and_flag(self):
+        entry = {"conditions": {
+            "Holofoil": {"used": "Lightly Played", "by": {
+                "Lightly Played": {"price": 340.0, "sales_30d": 3.0},
+                "Near Mint": {"price": 410.0, "sales_30d": 12.0}}},
+            "Reverse Holofoil": {"used": None, "by": {"Near Mint": {"price": 90.0, "sales_30d": 1.0}}},
+        }}
+        rows, used = ppt.conditions_for(entry, "Holofoil")
+        self.assertEqual([r["label"] for r in rows], ["NM", "LP"])
+        self.assertEqual(used, "Lightly Played")
+        self.assertEqual(ppt.conditions_for(entry, "Normal"), ([], None))   # two printings, none match
+        a = ppt.attach_conditions([{"pid": 1, "printing": "Holofoil", "tags": ["x"]}], {1: entry})[0]
+        self.assertEqual(a["tags"], ["x", "price is for Lightly Played, not Near Mint"])
+
+    def test_filter_on_chosen_conditions(self):
+        def alert(pid, **sold):
+            names = {"NM": "Near Mint", "LP": "Lightly Played", "MP": "Moderately Played"}
+            return {"pid": pid, "conditions": [{"label": k, "condition": names[k], "price": 1.0,
+                                               "sales_30d": float(n)} for k, n in sold.items()]}
+        alerts = [alert(1, NM=2), alert(2, MP=5), alert(3, LP=1, MP=1), {"pid": 4}]   # 4: not looked up
+        ccfg = {"enabled": True, "conditions": ["Near Mint", "Lightly Played"], "min_sales_30d": 1}
+        self.assertEqual([a["pid"] for a in ppt.apply_condition_filter(alerts, ccfg)], [1, 3])
+        self.assertEqual([a["pid"] for a in ppt.apply_condition_filter(alerts, {**ccfg, "min_sales_30d": 2})], [1])
+
+    def test_report_text(self):
+        self.assertEqual(condition_text([["NM", 410.0, 12], ["LP", None, 0]]), "NM $410 (12) · LP – (0)")
 
 
 if __name__ == "__main__":

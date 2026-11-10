@@ -130,14 +130,90 @@ def apply_graded_filter(alerts: list[dict], ebay: dict, gcfg: dict) -> list[dict
     return kept
 
 
+# TCGplayer's raw-card conditions, best first, with the short names shown in reports
+CONDITIONS = [("Near Mint", "NM"), ("Lightly Played", "LP"), ("Moderately Played", "MP"),
+              ("Heavily Played", "HP"), ("Damaged", "DMG")]
+CONDITION_ABBR = dict(CONDITIONS)
+
+
+def _dig_conditions(card: dict) -> dict:
+    """{printing: {"used": condition the market price is for, or None,
+                   "by": {condition: {"price": latest price, "sales_30d": copies sold}}}}
+
+    From priceHistory.variants[printing][condition].history (one point per day,
+    `price` and `volume`) and prices.variants[printing].conditionUsed."""
+    out: dict = {}
+    hist = ((card.get("priceHistory") or {}).get("variants")) or {}
+    for printing, conds in hist.items():
+        if not isinstance(conds, dict):
+            continue
+        by = {}
+        for cond, body in conds.items():
+            points = body.get("history") if isinstance(body, dict) else None
+            points = sorted((p for p in points or [] if isinstance(p, dict) and p.get("date")),
+                            key=lambda p: str(p["date"]))
+            price = next((p["price"] for p in reversed(points)
+                          if isinstance(p.get("price"), (int, float))), None)
+            sales = sum(float(p.get("volume") or 0) for p in points)
+            if price is not None or sales:
+                by[str(cond)] = {"price": price, "sales_30d": sales}
+        if by:
+            out[str(printing)] = {"used": None, "by": by}
+    for printing, body in (((card.get("prices") or {}).get("variants")) or {}).items():
+        if isinstance(body, dict) and isinstance(body.get("conditionUsed"), str):
+            out.setdefault(str(printing), {"used": None, "by": {}})["used"] = body["conditionUsed"]
+    return out
+
+
+def conditions_for(entry: dict | None, printing: str):
+    """The alert's printing (or, failing that, the only one there is): its
+    conditions best first as [{label, condition, price, sales_30d}] and the
+    condition TCGplayer's market price is for."""
+    variants = (entry or {}).get("conditions") or {}
+    v = variants.get(printing) or (next(iter(variants.values())) if len(variants) == 1 else None)
+    if not v:
+        return [], None
+    rows = [{"label": abbr, "condition": name, **v["by"][name]}
+            for name, abbr in CONDITIONS if name in v["by"]]
+    return rows, v.get("used")
+
+
+def attach_conditions(alerts: list[dict], ebay: dict) -> list[dict]:
+    """Add a["conditions"] to alerts on cards looked up today, and a tag when the
+    tracked market price is not a Near Mint price."""
+    out = []
+    for a in alerts:
+        rows, used = conditions_for(ebay.get(a["pid"]) or ebay.get(str(a["pid"])), a["printing"])
+        if not rows and not used:
+            out.append(a)
+            continue
+        tags = list(a.get("tags", []))
+        if used and used != "Near Mint":
+            tags.append(f"price is for {used}, not Near Mint")
+        out.append({**a, "conditions": rows, "tags": tags})
+    return out
+
+
+def apply_condition_filter(alerts: list[dict], ccfg: dict) -> list[dict]:
+    """Keep alerts on cards with enough sales in the chosen conditions over the
+    last 30 days (needs attach_conditions first). A card not looked up today has
+    no condition data and is left out."""
+    wanted = set(ccfg.get("conditions") or [])
+    need = float(ccfg.get("min_sales_30d", 1))
+    return [a for a in alerts
+            if a.get("conditions")
+            and sum(c["sales_30d"] for c in a["conditions"] if c["condition"] in wanted) >= need]
+
+
 def enrich(cfg: dict, store, targets: list[int], api_key: str, today_iso: str) -> dict:
-    """Fetch volume + graded eBay stats for `targets`. Returns {pid: ebay stats}."""
+    """Fetch volume, graded eBay stats and condition prices for `targets`.
+    Returns {pid: stats}. 30 days of history cost the same credits as 3."""
     base = cfg["ppt_base_url"].rstrip("/")
     vol = store.read_volume()
     ebay: dict = {}
     saved_debug = False
     for pid in targets:
-        url = f"{base}/cards/{pid}?includeHistory=true&includeEbay=true&days=3&limit=1"
+        url = f"{base}/cards/{pid}?includeHistory=true&includeEbay=true&days=30&limit=1"
         req = urllib.request.Request(url, headers={
             "Authorization": f"Bearer {api_key}", "User-Agent": cfg["user_agent"]})
         try:
@@ -165,7 +241,10 @@ def enrich(cfg: dict, store, targets: list[int], api_key: str, today_iso: str) -
             continue
         for d, v in _dig_history(card).items():
             vol.setdefault(pid, {})[d] = v  # recent days get revised: overwrite
-        e = _dig_ebay(card)
+        e = _dig_ebay(card) or {}
+        conds = _dig_conditions(card)
+        if conds:
+            e["conditions"] = conds
         if e:
             ebay[pid] = e
         try:

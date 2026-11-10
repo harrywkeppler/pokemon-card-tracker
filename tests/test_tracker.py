@@ -388,11 +388,20 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(len({r["date"] for r in log}), 2)
 
 
-def ppt_card(grades: dict) -> dict:
-    """A card reply in the API's shape: graded sales stats per grade key."""
-    return {"ebay": {"salesVelocity": 0.5, "totalSales": sum(n for n, _ in grades.values()),
+def ppt_card(grades, conditions=None, used=None):
+    """A card reply in the API's shape: graded sales stats per grade key, and
+    per-condition history for the Holofoil printing: {condition: (price, sold per day)}."""
+    card = {"ebay": {"salesVelocity": 0.5, "totalSales": sum(n for n, _ in grades.values()),
                      "salesByGrade": {k: {"count": n, "medianPrice": med, "marketPrice7Day": med}
                                       for k, (n, med) in grades.items()}}}
+    if conditions:
+        days = [(T - timedelta(days=i)).isoformat() for i in range(3)]
+        card["priceHistory"] = {"variants": {"Holofoil": {
+            cond: {"history": [{"date": d, "price": price, "volume": sold or None} for d in days]}
+            for cond, (price, sold) in conditions.items()}}}
+    if used:
+        card["prices"] = {"variants": {"Holofoil": {"conditionUsed": used}}}
+    return card
 
 
 class GradedEndToEnd(unittest.TestCase):
@@ -403,7 +412,11 @@ class GradedEndToEnd(unittest.TestCase):
         cls.work = tempfile.mkdtemp(prefix="pct_graded_")
         cls.site = FakeSite(cls.work)
         cls.site.ppt_cards = {
-            101001: ppt_card({"psa10": (3, 1250.0), "psa9": (5, 480.0), "psa6": (9, 90.0)}),
+            101001: ppt_card({"psa10": (3, 1250.0), "psa9": (5, 480.0), "psa6": (9, 90.0)},
+                             {"Near Mint": (305.0, 1), "Lightly Played": (250.0, 0),
+                              "Damaged": (90.0, 2)}, used="Lightly Played"),
+            # PSA 7-10 sales, but raw copies only sell Moderately Played: fails the condition filter
+            101007: ppt_card({"psa9": (2, 70.0)}, {"Moderately Played": (40.0, 1)}),
             101002: ppt_card({"psa6": (4, 150.0), "cgc10": (2, 900.0)}),   # nothing in PSA 7-10
             101003: ppt_card({"psa7": (0, None)}),                            # no sales
         }
@@ -434,21 +447,29 @@ class GradedEndToEnd(unittest.TestCase):
         cls.srv.shutdown()
         shutil.rmtree(cls.work, ignore_errors=True)
 
-    def test_only_cards_with_psa_7_to_10_sales_kept(self):
+    def test_only_cards_with_psa_7_to_10_sales_and_nm_lp_sales_kept(self):
         self.assertIn(101002, self.site.ppt_hits)          # alerts were looked up...
+        self.assertIn(101007, self.site.ppt_hits)
         self.assertEqual([a["id"] for a in self.payload["alerts"]], [101001])   # ...and filtered
+
+    def test_condition_prices_and_not_near_mint_flag(self):
+        a = self.payload["alerts"][0]
+        self.assertEqual(a["cond"], [["NM", 305.0, 3], ["LP", 250.0, 0], ["DMG", 90.0, 6]])
+        self.assertIn("price is for Lightly Played, not Near Mint", a["tags"])
 
     def test_psa_prices_attached_best_grade_first(self):
         a = self.payload["alerts"][0]
         self.assertEqual(a["gr"], [["PSA 10", 1250.0, 3], ["PSA 9", 480.0, 5]])
 
     def test_note_in_outputs(self):
-        note = self.payload["meta"]["graded_note"]
-        self.assertTrue(note.startswith("Only cards with PSA 7–10 sales: 1 of "), note)
+        note = self.payload["meta"]["filter_note"]
+        self.assertTrue(note.startswith("Only cards with PSA 7–10 sales: 2 of "), note)
+        self.assertIn("Only cards sold in Near Mint or Lightly Played in the last 30 days: 1 of 2 kept.", note)
         with open(os.path.join(self.repo, "REPORT.md"), encoding="utf-8") as f:
             md = f.read()
         self.assertIn(note, md)
         self.assertIn("PSA 10 $1,250 (3) · PSA 9 $480 (5)", md)
+        self.assertIn("NM $305 (3) · LP $250 (0) · DMG $90 (6)", md)
         log = Store(self.repo).read_alert_log()
         self.assertEqual({r["productId"] for r in log}, {"101001"})
 
@@ -456,8 +477,8 @@ class GradedEndToEnd(unittest.TestCase):
 class NoKeyNote(unittest.TestCase):
     def test_unfiltered_without_key_and_says_so(self):
         # EndToEnd runs without PPT_API_KEY: alerts stay unfiltered and the note says why
-        note = EndToEnd.day1["meta"]["graded_note"]
-        self.assertIn("needs PPT_API_KEY", note)
+        note = EndToEnd.day1["meta"]["filter_note"]
+        self.assertIn("PSA 7–10 and condition filters need PPT_API_KEY", note)
 
 
 if __name__ == "__main__":

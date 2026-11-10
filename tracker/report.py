@@ -53,6 +53,9 @@ def _detail(r: dict, catalog: dict, series: dict, today: int, cats: dict, ebay: 
         # graded sales in the chosen range: [label, median price, sales], best grade first
         "gr": [[g["label"], _r(g["median"], 2) if isinstance(g["median"], (int, float)) else None,
                 g["count"]] for g in r.get("graded") or []],
+        # raw-card conditions: [short name, latest price, sales in 30 days], best first
+        "cond": [[c["label"], _r(c["price"], 2) if isinstance(c["price"], (int, float)) else None,
+                  int(c["sales_30d"])] for c in r.get("conditions") or []],
     }
 
 
@@ -61,8 +64,13 @@ def graded_text(gr: list) -> str:
     return " · ".join(f"{label} {'–' if med is None else f'${med:,.0f}'} ({n})" for label, med, n in gr)
 
 
+def condition_text(cond: list) -> str:
+    """'NM $410 (12) · LP $340 (3)': latest price, sales in the last 30 days"""
+    return " · ".join(f"{label} {'–' if p is None else f'${p:,.0f}'} ({n})" for label, p, n in cond)
+
+
 def build_payload(cfg, result, catalog, series, today_iso, alert_log, n_dates, ebay=None,
-                  graded_note=None) -> dict:
+                  filter_note=None) -> dict:
     today = date.fromisoformat(today_iso).toordinal()
     cats = cfg["categories"]
     ebay = ebay or {}
@@ -101,7 +109,7 @@ def build_payload(cfg, result, catalog, series, today_iso, alert_log, n_dates, e
             "median_c7": _r(statistics.median(r["c7"] for r in with7), 2) if with7 else None,
             "volume_enabled": any(r.get("vol") for r in rows),
             "languages": sorted(set(cats.values())),
-            "graded_note": graded_note,
+            "filter_note": filter_note,
         },
         "alerts": [_detail(r, catalog, series, today, cats, ebay) for r in alerts],
         "gainers": [_detail(r, catalog, series, today, cats, ebay) for r in gain],
@@ -139,8 +147,8 @@ def write_markdown(root: str, payload: dict) -> str:
          f"· {m['watch']} on the watch list", ""]
     if m["days_of_history"] < 8:
         L += ["> Still building history: 7-day signals start once 8 days of prices are stored.", ""]
-    if m.get("graded_note"):
-        L += [f"> {m['graded_note']}", ""]
+    if m.get("filter_note"):
+        L += [f"> {m['filter_note']}", ""]
 
     def table(title, items, limit):
         if not items:
@@ -155,6 +163,8 @@ def write_markdown(root: str, payload: dict) -> str:
                 why = f"**{a['sev']}**{' (new)' if a['new'] else ''}: {why}"
             if a.get("gr"):
                 why += f"<br><sub>{graded_text(a['gr'])}</sub>"
+            if a.get("cond"):
+                why += f"<br><sub>{condition_text(a['cond'])}</sub>"
             L.append(f"| {name}<br><sub>{extra}</sub> | {a['s']} | ${a['p']:,.2f} | "
                      f"{_fmt_pct(a['c1'])} | {_fmt_pct(a['c7'])} | {_fmt_pct(a['c30'])} | {why} |")
         L.append("")

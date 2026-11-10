@@ -35,6 +35,14 @@
     "max_grade": 10,
     "min_sales": 1
   },
+  "condition_filter": {
+    "enabled": true,
+    "conditions": [
+      "Near Mint",
+      "Lightly Played"
+    ],
+    "min_sales_30d": 1
+  },
   "volume_api": {
     "daily_credits": 100,
     "credits_per_card": 3,
