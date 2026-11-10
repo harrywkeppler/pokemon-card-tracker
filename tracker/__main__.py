@@ -164,6 +164,14 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
     payload = report.build_payload(cfg, result, catalog, series, today_iso, log, len(used), ebay)
     report.write_dashboard(root, payload)
     report.write_markdown(root, payload)
+    try:
+        from . import excel
+        xl = excel.write_workbook(os.path.join(root, "out", "tracker.xlsx"), cfg, result,
+                                  catalog, series, used, today_iso, log, payload["meta"],
+                                  repo=os.environ.get("GITHUB_REPOSITORY"))
+        print(f"Excel workbook written: {os.path.relpath(xl, root)}")
+    except ImportError:
+        print("openpyxl not installed; skipping the Excel workbook")
     m = payload["meta"]
     print(f"{today_iso}: {m['universe']} cards in band, {m['alerts']} alerts "
           f"({m['new_alerts']} new; {m['up']} up, {m['down']} down), {m['watch']} on watch.")

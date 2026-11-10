@@ -25,8 +25,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install archive reader
-        run: pip install py7zr
+      - name: Install archive and Excel libraries
+        run: pip install py7zr openpyxl
 
       - name: Download prices, find movers, rebuild dashboard
         env:
@@ -37,6 +37,15 @@ jobs:
         if: always()
         run: |
           if [ -f REPORT.md ]; then head -c 900000 REPORT.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Publish the Excel workbook at its fixed download link
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view latest >/dev/null 2>&1 || \
+            gh release create latest --title "Latest data" \
+              --notes "tracker.xlsx is replaced with fresh data every day. Download link: https://github.com/${{ github.repository }}/releases/download/latest/tracker.xlsx"
+          gh release upload latest out/tracker.xlsx --clobber
 
       - name: Save data and dashboard to the repository
         run: |

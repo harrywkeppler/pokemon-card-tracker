@@ -365,6 +365,15 @@ class EndToEnd(unittest.TestCase):
         with open(os.path.join(self.repo, "docs", "index.html"), encoding="utf-8") as f:
             html = f.read()
         self.assertNotIn("/*__DATA__*/null", html)
+        from openpyxl import load_workbook
+        wb = load_workbook(os.path.join(self.repo, "out", "tracker.xlsx"))
+        self.assertEqual(wb.sheetnames[0], "Alerts")
+        tables = {t for ws in wb.worksheets for t in ws.tables}
+        self.assertEqual(tables, {"tblAlerts", "tblWatch", "tblGainers", "tblDecliners",
+                                  "tblCards", "tblHistory", "tblPrices"})
+        ids = [r[-1] for r in wb["Alerts"].iter_rows(min_row=2, values_only=True)]
+        self.assertIn(101001, ids)
+        self.assertNotIn(101010, ids)
         log = Store(self.repo).read_alert_log()
         self.assertEqual(len({r["date"] for r in log}), 2)
 

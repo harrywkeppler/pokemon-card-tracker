@@ -18,18 +18,25 @@ def _spark(obs: list, today: int) -> list:
     return [[o[0] - today, round(o[1], 2)] for o in obs if today - o[0] <= SPARK_DAYS]
 
 
+def caution_tags(r: dict) -> list:
+    """Notes for a card that is not an alert: why a big move may not be real."""
+    tags = []
+    if r.get("outlier7"):
+        tags.append("one outlier sale: listings didn't move")
+    elif r.get("c7") is not None and abs(r["c7"]) >= 5 and \
+            not (r.get("agree7") or r.get("same7", 0) >= 2):
+        tags.append("unconfirmed: one sale, listings flat")
+    if r.get("sales30") is not None and r["sales30"] <= 2:
+        tags.append("thinly traded")
+    return tags
+
+
 def _detail(r: dict, catalog: dict, series: dict, today: int, cats: dict, ebay: dict) -> dict:
     m = catalog.get(str(r["pid"]), {})
     v = r.get("vol") or None
     tags = r.get("tags")
     if tags is None:  # not an alert: add the caution notes that still apply
-        tags = []
-        if r.get("outlier7"):
-            tags.append("one outlier sale: listings didn't move")
-        elif r.get("c7") is not None and not (r.get("agree7") or r.get("same7", 0) >= 2):
-            tags.append("unconfirmed: one sale, listings flat")
-        if r.get("sales30") is not None and r["sales30"] <= 2:
-            tags.append("thinly traded")
+        tags = caution_tags(r)
     return {
         "id": r["pid"], "pr": r["printing"],
         "n": m.get("name") or f"Product {r['pid']}", "s": m.get("group", ""),

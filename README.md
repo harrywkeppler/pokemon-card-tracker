@@ -12,6 +12,11 @@ It runs free on GitHub Actions. Nothing needs to stay switched on at home.
   gainers and decliners, every tracked card with 1/7/30-day changes, a 60-day
   price line per mover, and an alert history. Each card has one-click searches
   for eBay sold listings, live eBay listings and Facebook Marketplace.
+- **Excel workbook** (`tracker.xlsx`), replaced every day at a fixed link:
+  `https://github.com/harrywkeppler/pokemon-card-tracker/releases/download/latest/tracker.xlsx`.
+  Sheets: Alerts, Watch list, Top gainers, Top decliners, All cards, Alert
+  history, Price history (60 days), About. To have Excel update it for you, see
+  "Excel that refreshes itself" below.
 - **`REPORT.md`**: the same alerts as a plain table. It renders on the
   repository's front page and in the GitHub mobile app.
 - **`data/`**: the raw history (one small file per day), yours to keep.
@@ -34,6 +39,23 @@ After that it runs by itself every day at 21:37 UTC.
 
 If the last step of a run fails with a permissions error, open **Settings →
 Actions → General → Workflow permissions** and choose **Read and write**.
+
+## Excel that refreshes itself
+
+Download the link above any time for that day's copy. Or set Excel to pull it
+(Microsoft 365 Excel, Windows or Mac):
+
+1. In a new, blank workbook: **Data → Get Data → From Other Sources → From Web**.
+2. Paste the download link and press OK.
+3. In the Navigator, tick **Select multiple items**, choose the tables you want
+   (`tblAlerts`, `tblCards`, `tblPrices`, ...) and press **Load**.
+4. **Data → Refresh All** fetches the latest day. To make it automatic: **Data →
+   Queries & Connections**, right-click a query → **Properties** → tick
+   **Refresh data when opening the file**.
+
+You can add your own sheets, notes and charts next to the loaded tables; a
+refresh only replaces the tables themselves. New data appears once a day,
+around 4:40 pm Eastern.
 
 ## Where the numbers come from
 
@@ -113,7 +135,7 @@ days in the last 30 with a price change. Cards with 2 or fewer are tagged
 ## Running it yourself
 
 ```
-pip install py7zr
+pip install py7zr openpyxl
 python -m tracker run       # download today's prices, then analyse
 python -m tracker report    # re-analyse stored data only
 python -m unittest discover -s tests -v

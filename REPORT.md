@@ -116,4 +116,4 @@
 | [Altaria](https://www.tcgplayer.com/product/83514/pokemon-ex-deoxys-altaria)<br><sub>1/107 · Holofoil · English</sub> | EX Deoxys | $104.00 | +0.0% | -20.0% | -20.0% | unconfirmed: one sale, listings flat, thinly traded |
 
 
-_Generated 2026-11-10 22:46 UTC. Prices: TCGplayer via tcgcsv.com._
+_Generated 2026-11-10 23:00 UTC. Prices: TCGplayer via tcgcsv.com._
