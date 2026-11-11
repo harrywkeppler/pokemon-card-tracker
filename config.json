@@ -43,6 +43,29 @@
     ],
     "min_sales_30d": 1
   },
+  "listing_scan": {
+    "enabled": true,
+    "ebay_base_url": "https://api.ebay.com",
+    "category_ids": "183454",
+    "cards_per_run": 120,
+    "results_per_card": 50,
+    "min_age_hours": 2,
+    "max_age_hours": 12,
+    "conditions": [
+      "Near Mint",
+      "Lightly Played"
+    ],
+    "min_gap_pct": 25,
+    "min_gap_dollars": 20,
+    "min_comparable_listings": 3,
+    "min_price_share": 0.2,
+    "pause_seconds": 0.2,
+    "exclude_words": [
+      "lot", "lots", "bundle", "proxy", "custom", "orica", "replica", "reprint", "fake",
+      "digital", "code card", "online code", "empty", "art card", "metal", "gold plated",
+      "jumbo", "oversized", "sticker", "you pick", "choose", "mystery", "repack"
+    ]
+  },
   "excel_view": {
     "min_price": 100,
     "max_price": 5000,

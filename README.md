@@ -134,6 +134,57 @@ the chosen conditions. Without the key neither filter can run.
 > been run against the live service. The first reply is saved to
 > `data/debug/ppt_last_response.json` so the parsing can be checked.
 
+## Hourly scan of new eBay listings (optional)
+
+Every hour, a second workflow (`Hourly listing scan`) looks at eBay listings
+that went up **2 to 12 hours ago and are still for sale**, raw **Near Mint or
+Lightly Played** or graded **PSA 7–10**, and flags any priced **25% and $20 or
+more under** comparable prices for the same card in the same condition or grade:
+
+- recent sales: TCGplayer's price for that condition, or the PSA sale median
+  for that grade (both from the PokemonPriceTracker lookup), or TCGplayer's
+  market price for a Near Mint card the lookup has not covered;
+- other current eBay listings of that card in that condition or grade (their
+  median, when there are at least 3).
+
+Finds go to `LISTINGS.md`, `docs/listings.json` and `listings.xlsx` at the
+same download link as the daily workbook. Each find shows the price with
+shipping, how far under it is and against what, how long ago it was listed,
+and watchers when eBay provides them.
+
+**Set-up (once):**
+
+1. Create a free account at developer.ebay.com, then an application
+   ("Create a keyset") for **Production**.
+2. In this repository: **Settings → Secrets and variables → Actions**, add
+   `EBAY_CLIENT_ID` (the App ID) and `EBAY_CLIENT_SECRET` (the Cert ID).
+3. Optional, for watcher counts: eBay returns how many people watch a listing
+   only to apps it approves. Open an **App Check** ticket in the developer
+   portal and ask for access to Watch Count data in the Browse API.
+
+Without the two secrets the hourly run ends without changing anything.
+
+Things to know:
+
+- About 120 cards are searched an hour: the watchlist, today's alerts and the
+  cards with condition or PSA data first, the rest of the price band in turn
+  (all of it about every 18 hours). That stays within eBay's 5,000 calls a day.
+- Condition and grade come from the listing's condition fields on eBay, or its
+  title when those are missing. Lots, proxies, customs, other card numbers,
+  the other language, 1st Edition and reverse holo copies are skipped unless
+  the tracked printing is one.
+- eBay does not publish add-to-cart counts, and TCGplayer and Facebook
+  Marketplace offer no listing data, so the scan covers eBay only.
+
+| `listing_scan` setting | Default | Meaning |
+|---|---|---|
+| `min_age_hours` / `max_age_hours` | 2 / 12 | how new a listing must be |
+| `conditions` | Near Mint, Lightly Played | raw conditions scanned (graded uses `graded_filter`) |
+| `min_gap_pct` / `min_gap_dollars` | 25 / 20 | how far under comparable prices |
+| `min_comparable_listings` | 3 | other listings needed for a listings median |
+| `cards_per_run` | 120 | cards searched an hour |
+| `exclude_words` | lot, proxy, custom, ... | titles with these words are skipped |
+
 ## How a card gets flagged
 
 TCGplayer's market price only changes when a card sells, which for most cards
