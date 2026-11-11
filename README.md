@@ -139,7 +139,7 @@ the chosen conditions. Without the key neither filter can run.
 Every other hour from 8 am to 10 pm Eastern (none from midnight to 8 am), a
 second workflow (`Hourly listing scan`) looks at eBay listings
 that went up **2 to 12 hours ago and are still for sale**, raw **Near Mint or
-Lightly Played** or graded **PSA 7–10**, and flags any priced **25% and $20 or
+Lightly Played or Moderately Played** or graded **PSA 7–10**, and flags any priced **25% and $20 or
 more under** comparable prices for the same card in the same condition or grade:
 
 - recent sales: TCGplayer's price for that condition, or the PSA sale median
@@ -169,9 +169,9 @@ Without the two secrets the hourly run ends without changing anything.
 
 Things to know:
 
-- About 120 cards are searched a run: the watchlist, today's alerts and the
+- About 240 cards are searched a run: the watchlist, today's alerts and the
   cards with condition or PSA data first, the rest of the price band in turn
-  (all of it in about two days). That stays well within eBay's 5,000 calls a day.
+  (all of it in about a day). That stays within eBay's 5,000 calls a day.
 - Condition and grade come from the listing's condition fields on eBay, or its
   title when those are missing. Lots, proxies, customs, other card numbers,
   the other language, 1st Edition and reverse holo copies are skipped unless
@@ -182,10 +182,10 @@ Things to know:
 | `listing_scan` setting | Default | Meaning |
 |---|---|---|
 | `min_age_hours` / `max_age_hours` | 2 / 12 | how new a listing must be |
-| `conditions` | Near Mint, Lightly Played | raw conditions scanned (graded uses `graded_filter`) |
+| `conditions` | Near Mint, Lightly Played, Moderately Played | raw conditions scanned (graded uses `graded_filter`) |
 | `min_gap_pct` / `min_gap_dollars` | 25 / 20 | how far under comparable prices |
 | `min_comparable_listings` | 3 | other listings needed for a listings median |
-| `cards_per_run` | 120 | cards searched an hour |
+| `cards_per_run` | 240 | cards searched a run |
 | `max_finds` | 100 | most listings kept in the hourly file (best deals first) |
 | `exclude_words` | lot, proxy, custom, ... | titles with these words are skipped |
 
