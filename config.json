@@ -47,13 +47,14 @@
     "enabled": true,
     "ebay_base_url": "https://api.ebay.com",
     "category_ids": "183454",
-    "cards_per_run": 120,
+    "cards_per_run": 240,
     "results_per_card": 50,
     "min_age_hours": 2,
     "max_age_hours": 12,
     "conditions": [
       "Near Mint",
-      "Lightly Played"
+      "Lightly Played",
+      "Moderately Played"
     ],
     "min_gap_pct": 25,
     "min_gap_dollars": 20,
