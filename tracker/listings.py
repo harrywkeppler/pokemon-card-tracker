@@ -212,6 +212,29 @@ def comparisons(card: dict, cls: dict, entry: dict | None, others: list[float], 
     return out
 
 
+def _set_words_in_title(f: dict) -> int:
+    """How many words of the card's set name (minus a 'SV2a:'-style code) the title contains."""
+    name = re.sub(r"^[^:]*:\s*", "", f.get("set") or "").lower()
+    words = [w for w in re.findall(r"[a-z0-9&']+", name) if len(w) > 2]
+    t = f.get("title", "").lower()
+    return sum(1 for w in words if w in t)
+
+
+def dedupe(finds: list[dict]) -> list[dict]:
+    """One row per eBay listing. A listing that matched several tracked cards (same
+    name and number in different sets) stays with the card whose set name its
+    title names most, then the one it is furthest under; biggest gap first."""
+    best = {}
+    for f in finds:
+        key = f["item_id"]
+        rank = (_set_words_in_title(f), f["gap_pct"])
+        if key not in best or rank > best[key][0]:
+            best[key] = (rank, f)
+    out = [f for _, f in best.values()]
+    out.sort(key=lambda f: (-f["gap_pct"], f["listed_hours_ago"]))
+    return out
+
+
 def run(cfg: dict, store, root: str, now: datetime | None = None) -> dict:
     lc = cfg.get("listing_scan") or {}
     now = now or datetime.now(timezone.utc)
@@ -253,7 +276,8 @@ def run(cfg: dict, store, root: str, now: datetime | None = None) -> dict:
                 age = (now - born).total_seconds() / 3600 if born else None
                 if age is not None and min_age <= age <= max_age:
                     pending.append((card, s, same, age))
-        full = client.get_items([s["itemId"] for _, s, _, _ in pending]) if pending else {}
+        ids = list(dict.fromkeys(s["itemId"] for _, s, _, _ in pending))   # each listing once
+        full = client.get_items(ids) if ids else {}
     except ebay.EbayError as e:
         result["note"] = f"eBay scan stopped early: {e}"
         print(result["note"])
@@ -305,6 +329,7 @@ def run(cfg: dict, store, root: str, now: datetime | None = None) -> dict:
             "gap_pct": best["gap_pct"], "gap_usd": best["gap_usd"], "vs": best["label"],
         })
 
+    finds = dedupe(finds)[:int(lc.get("max_finds", 100))]
     state = store._load("listings/state.json", {})
     keep_after = now - timedelta(hours=max_age * 2)
     state = {k: v for k, v in state.items() if (_parse_time(v) or now) >= keep_after}

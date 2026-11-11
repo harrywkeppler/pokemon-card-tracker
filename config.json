@@ -58,6 +58,7 @@
     "min_gap_pct": 25,
     "min_gap_dollars": 20,
     "min_comparable_listings": 3,
+    "max_finds": 100,
     "min_price_share": 0.2,
     "pause_seconds": 0.2,
     "exclude_words": [
