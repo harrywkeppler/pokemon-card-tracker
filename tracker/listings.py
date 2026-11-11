@@ -238,7 +238,8 @@ def dedupe(finds: list[dict]) -> list[dict]:
 def run(cfg: dict, store, root: str, now: datetime | None = None) -> dict:
     lc = cfg.get("listing_scan") or {}
     now = now or datetime.now(timezone.utc)
-    result = {"generated": now.strftime("%Y-%m-%d %H:%M UTC"), "finds": [], "scanned": 0,
+    result = {"generated": now.strftime("%Y-%m-%d %H:%M UTC"), "generated_local": eastern(now),
+              "finds": [], "scanned": 0,
               "calls": 0, "note": None,
               "window_hours": [lc.get("min_age_hours", 2), lc.get("max_age_hours", 12)]}
     if not lc.get("enabled"):
@@ -346,12 +347,31 @@ def run(cfg: dict, store, root: str, now: datetime | None = None) -> dict:
     return result
 
 
+def eastern(t: datetime) -> str:
+    """'Wed 11 Nov, 11:22 am ET' (US Eastern; UTC if the time-zone data is missing)."""
+    try:
+        from zoneinfo import ZoneInfo
+        t = t.astimezone(ZoneInfo("America/New_York"))
+        zone = "ET"
+    except Exception:  # noqa: BLE001 - no tz database: say UTC rather than fail
+        t = t.astimezone(timezone.utc)
+        zone = "UTC"
+    hour = t.strftime("%I").lstrip("0")
+    return f"{t.strftime('%a')} {t.day} {t.strftime('%b')}, {hour}:{t.strftime('%M')} {t.strftime('%p').lower()} {zone}"
+
+
 def _usd(x):
     return "–" if x is None else f"${x:,.2f}"
 
 
 def write_outputs(root: str, result: dict) -> None:
     os.makedirs(os.path.join(root, "docs"), exist_ok=True)
+    # the workbook is uploaded, not committed: always rewrite it, so its
+    # "Last updated" line shows the latest check even after a quiet hour
+    try:
+        _workbook(os.path.join(root, "out", "listings.xlsx"), result)
+    except ImportError:
+        pass
     try:   # an empty hour after an empty hour changes nothing: keep the files, skip a commit
         with open(os.path.join(root, "docs", "listings.json"), encoding="utf-8") as f:
             before = json.load(f)
@@ -362,7 +382,7 @@ def write_outputs(root: str, result: dict) -> None:
     with open(os.path.join(root, "docs", "listings.json"), "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
     lo, hi = result["window_hours"]
-    L = [f"# New eBay listings under comparable prices: {result['generated']}", "",
+    L = [f"# New eBay listings under comparable prices: {result.get('generated_local') or result['generated']}", "",
          f"Listings that went up {lo:g}–{hi:g} hours ago and are still for sale, priced well under "
          f"recent sales or other listings of the same card in the same condition or grade. "
          f"{result['scanned']} cards scanned this hour.", ""]
@@ -384,10 +404,6 @@ def write_outputs(root: str, result: dict) -> None:
           "Check photos and seller before buying. Not financial advice._", ""]
     with open(os.path.join(root, "LISTINGS.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L))
-    try:
-        _workbook(os.path.join(root, "out", "listings.xlsx"), result)
-    except ImportError:
-        pass
 
 
 def _workbook(path: str, result: dict) -> None:
@@ -401,8 +417,14 @@ def _workbook(path: str, result: dict) -> None:
     wb = Workbook()
     ws = wb.active
     ws.title = "New listings"
-    ws.append(cols)
-    for c in ws[1]:
+    n_new = sum(1 for x in result["finds"] if x.get("new"))
+    ws["A1"] = (f"Last updated: {result.get('generated_local') or result['generated']}  ·  "
+                f"{len(result['finds'])} listings, {n_new} new since the previous check  ·  "
+                f"{result['scanned']} cards searched")
+    ws["A1"].font = Font(name="Arial", size=11, bold=True)
+    ws.append([])
+    ws.append(cols)                                   # header on row 3, data from row 4
+    for c in ws[3]:
         c.font = Font(name="Arial", size=10, bold=True, color="FFFFFF")
         c.fill = PatternFill("solid", fgColor="1F3A5F")
     for x in result["finds"]:
@@ -420,7 +442,7 @@ def _workbook(path: str, result: dict) -> None:
     for j, name in enumerate(cols, start=1):
         letter = get_column_letter(j)
         ws.column_dimensions[letter].width = widths.get(name, 12)
-        for i in range(2, ws.max_row + 1):
+        for i in range(4, ws.max_row + 1):
             cell = ws.cell(row=i, column=j)
             cell.font = Font(name="Arial", size=10)
             if name in fmt:
@@ -428,8 +450,8 @@ def _workbook(path: str, result: dict) -> None:
             if name in ("eBay link", "TCGplayer") and isinstance(cell.value, str) and cell.value.startswith("http"):
                 cell.hyperlink = cell.value
                 cell.font = Font(name="Arial", size=10, color="0563C1", underline="single")
-    ws.freeze_panes = "C2"
-    tab = Table(displayName="tblListings", ref=f"A1:{get_column_letter(len(cols))}{ws.max_row}")
+    ws.freeze_panes = "C4"
+    tab = Table(displayName="tblListings", ref=f"A3:{get_column_letter(len(cols))}{ws.max_row}")
     tab.tableStyleInfo = TableStyleInfo(name="TableStyleLight9", showRowStripes=True)
     ws.add_table(tab)
     os.makedirs(os.path.dirname(path), exist_ok=True)
