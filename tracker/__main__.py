@@ -213,12 +213,17 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="tracker")
-    ap.add_argument("command", choices=["run", "report"],
-                    help="run = download today's prices then analyse; report = analyse stored data only")
+    ap.add_argument("command", choices=["run", "report", "listings"],
+                    help="run = download today's prices then analyse; report = analyse stored data only; "
+                         "listings = scan new eBay listings for underpriced cards (hourly)")
     ap.add_argument("--root", default=os.getcwd())
     args = ap.parse_args(argv)
     cfg = load_config(args.root)
     store = Store(args.root)
+    if args.command == "listings":
+        from . import listings
+        listings.run(cfg, store, args.root)
+        return 0
     if args.command == "run":
         client = Client(cfg["tcgcsv_base_url"], cfg["user_agent"], cfg["request_pause_seconds"])
         day = sync_today(cfg, store, client)

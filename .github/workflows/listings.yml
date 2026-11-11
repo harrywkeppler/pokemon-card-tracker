@@ -1,0 +1,63 @@
+name: Hourly listing scan
+
+on:
+  schedule:
+    # every hour at :17. Needs the EBAY_CLIENT_ID and EBAY_CLIENT_SECRET secrets;
+    # without them the run ends without changing anything.
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: card-tracker          # queues behind the daily run, so their pushes never collide
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the Excel library
+        run: pip install openpyxl
+
+      - name: Scan new eBay listings
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+        run: python -m tracker listings
+
+      - name: Show the finds on the run page
+        if: always()
+        run: |
+          if [ -f LISTINGS.md ]; then cat LISTINGS.md >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Publish listings.xlsx at its fixed download link
+        if: hashFiles('out/listings.xlsx') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view latest >/dev/null 2>&1 || \
+            gh release create latest --title "Latest data" \
+              --notes "tracker.xlsx (daily) and listings.xlsx (hourly) are replaced with fresh data."
+          gh release upload latest out/listings.xlsx --clobber
+
+      - name: Save the finds to the repository
+        run: |
+          git config user.name "card-tracker"
+          git config user.email "card-tracker@users.noreply.github.com"
+          git add -A docs/listings.json LISTINGS.md data/listings 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Nothing changed this hour."
+          else
+            git commit -m "Listing scan $(date -u '+%F %H:00 UTC')"
+            git pull --rebase --quiet
+            git push
+          fi
