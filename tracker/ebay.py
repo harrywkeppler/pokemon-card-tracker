@@ -49,8 +49,20 @@ class Client:
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
                 self.token = json.loads(resp.read())["access_token"]
-        except (urllib.error.HTTPError, KeyError, ValueError) as e:
-            raise EbayError(f"eBay sign-in failed ({e}); check EBAY_CLIENT_ID / EBAY_CLIENT_SECRET")
+        except urllib.error.HTTPError as e:
+            # eBay names the reason (e.g. invalid_client); the reply never echoes the keys
+            try:
+                why = json.loads(e.read() or b"{}")
+                why = ": ".join(str(why[k]) for k in ("error", "error_description") if why.get(k))
+            except ValueError:
+                why = ""
+            id_kind = ("Production" if "-PRD-" in self.client_id else
+                       "Sandbox" if "-SBX-" in self.client_id else "unrecognised")
+            raise EbayError(f"eBay sign-in failed (HTTP {e.code}{': ' + why if why else ''}); "
+                            f"EBAY_CLIENT_ID looks like a {id_kind} App ID, "
+                            f"{len(self.client_id)} characters; secret {len(self.client_secret)} characters")
+        except (KeyError, ValueError) as e:
+            raise EbayError(f"eBay sign-in gave an unexpected reply ({e})")
         return self.token
 
     def _get(self, path: str, params: dict) -> dict:
