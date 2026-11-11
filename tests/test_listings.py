@@ -214,7 +214,13 @@ class ListingScan(unittest.TestCase):
         with open(os.path.join(self.root, "docs", "listings.json"), encoding="utf-8") as fh:
             data = json.load(fh)
         self.assertEqual(len(data["finds"]), 3)                       # the second run's
-        self.assertTrue(os.path.exists(os.path.join(self.root, "out", "listings.xlsx")))
+        from openpyxl import load_workbook
+        ws = load_workbook(os.path.join(self.root, "out", "listings.xlsx"))["New listings"]
+        # second run, 21:00 UTC = 4:00 pm Eastern; 3 finds, c-too-new the only new one
+        self.assertEqual(ws["A1"].value, "Last updated: Tue 10 Nov, 4:00 pm ET  ·  "
+                                         "3 listings, 1 new since the previous check  ·  3 cards searched")
+        self.assertEqual(ws["A3"].value, "New")
+        self.assertEqual(ws.tables["tblListings"].ref, "A3:R6")
         self.assertFalse(self.find("c-deal", self.again)["new"])   # shown last hour already
 
     def test_without_keys_nothing_is_written(self):
