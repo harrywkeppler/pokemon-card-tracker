@@ -149,7 +149,9 @@ more under** comparable prices for the same card in the same condition or grade:
   median, when there are at least 3).
 
 Finds go to `LISTINGS.md`, `docs/listings.json` and `listings.xlsx` at the
-same download link as the daily workbook. Each find shows the price with
+same download link as the daily workbook. Each hour replaces the previous list: a listing
+that sold, ended or passed 12 hours drops off, every listing appears once
+(under the card whose set its title names), and at most 100 are kept. Each find shows the price with
 shipping, how far under it is and against what, how long ago it was listed,
 and watchers when eBay provides them.
 
@@ -184,6 +186,7 @@ Things to know:
 | `min_gap_pct` / `min_gap_dollars` | 25 / 20 | how far under comparable prices |
 | `min_comparable_listings` | 3 | other listings needed for a listings median |
 | `cards_per_run` | 120 | cards searched an hour |
+| `max_finds` | 100 | most listings kept in the hourly file (best deals first) |
 | `exclude_words` | lot, proxy, custom, ... | titles with these words are skipped |
 
 ## How a card gets flagged

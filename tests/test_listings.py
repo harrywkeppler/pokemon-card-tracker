@@ -136,11 +136,15 @@ class ListingScan(unittest.TestCase):
         st.save_catalog({
             "5001": {"name": "Charizard ex", "group": "Obsidian Flames", "number": "223/197", "cat": 3,
                      "url": "https://www.tcgplayer.com/product/5001", "is_card": True},
+            # same name and number, another set: the Charizard listings match it too
+            "5003": {"name": "Charizard ex", "group": "Trick or Trade Promos", "number": "223/197",
+                     "cat": 3, "url": "https://www.tcgplayer.com/product/5003", "is_card": True},
             "5002": {"name": "Lugia", "group": "Neo Genesis", "number": "9/111", "cat": 3,
                      "url": "https://www.tcgplayer.com/product/5002", "is_card": True},
         })
         st.write_snapshot("2026-11-10", {(5001, "Holofoil"): (400.0, 450.0, 380.0),
-                                         (5002, "Holofoil"): (1000.0, 1100.0, 950.0)})
+                                         (5002, "Holofoil"): (1000.0, 1100.0, 950.0),
+                                         (5003, "Holofoil"): (400.0, 450.0, 380.0)})
         st._save("ebay/2026-11-10.json", {
             "5001": {"grades": {}, "conditions": {"Holofoil": {"used": "Near Mint", "by": {
                 "Near Mint": {"price": 420.0, "sales_30d": 6.0},
@@ -166,6 +170,10 @@ class ListingScan(unittest.TestCase):
 
     def test_only_the_two_bargains_biggest_gap_first(self):
         self.assertEqual([f["item_id"] for f in self.result["finds"]], ["l-psa10-deal", "c-deal"])
+
+    def test_a_listing_matching_two_cards_appears_once_under_its_own_set(self):
+        rows = [f for f in self.result["finds"] if f["item_id"] == "c-deal"]
+        self.assertEqual([f["pid"] for f in rows], [5001])          # title names Obsidian Flames
 
     def test_listing_enters_the_window_next_hour(self):
         # an hour later the 1-hour-old listing is 2 hours old: now in the window, and new
@@ -193,9 +201,9 @@ class ListingScan(unittest.TestCase):
         self.assertIn("buyingOptions:{FIXED_PRICE}", q["filter"])
         self.assertEqual(q["category_ids"], "183454")
         self.assertEqual(self.site.tokens, 2)                 # one sign-in per run
-        # 2 searches + one lookup per listing in the window that matched its card:
+        # 3 searches + one lookup per distinct listing in the window that matched a card:
         # c-deal, c-lp-fair (fails, skipped), l-psa10-deal, l-psa6, l-cgc10
-        self.assertEqual(self.result["calls"], 7)
+        self.assertEqual(self.result["calls"], 8)
         self.assertIsNone(self.result["note"])
 
     def test_outputs_and_seen_state(self):
@@ -217,6 +225,14 @@ class ListingScan(unittest.TestCase):
             self.assertFalse(os.path.exists(os.path.join(root, "LISTINGS.md")))
         finally:
             shutil.rmtree(root, ignore_errors=True)
+
+
+class Dedupe(unittest.TestCase):
+    def test_one_row_per_listing_and_cap(self):
+        f = lambda iid, pid, st, gap: {"item_id": iid, "pid": pid, "set": st, "gap_pct": gap,  # noqa: E731
+                                       "title": "Lugia 9/111 Neo Genesis", "listed_hours_ago": 3}
+        out = listings.dedupe([f("a", 1, "Neo Genesis", 30), f("a", 2, "Promo", 50), f("b", 3, "x", 40)])
+        self.assertEqual([(x["item_id"], x["pid"]) for x in out], [("b", 3), ("a", 1)])
 
 
 class Matching(unittest.TestCase):
