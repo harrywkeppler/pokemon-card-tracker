@@ -136,7 +136,8 @@ the chosen conditions. Without the key neither filter can run.
 
 ## Hourly scan of new eBay listings (optional)
 
-Every hour, a second workflow (`Hourly listing scan`) looks at eBay listings
+Every other hour from 8 am to 10 pm Eastern (none from midnight to 8 am), a
+second workflow (`Hourly listing scan`) looks at eBay listings
 that went up **2 to 12 hours ago and are still for sale**, raw **Near Mint or
 Lightly Played** or graded **PSA 7–10**, and flags any priced **25% and $20 or
 more under** comparable prices for the same card in the same condition or grade:
@@ -166,9 +167,9 @@ Without the two secrets the hourly run ends without changing anything.
 
 Things to know:
 
-- About 120 cards are searched an hour: the watchlist, today's alerts and the
+- About 120 cards are searched a run: the watchlist, today's alerts and the
   cards with condition or PSA data first, the rest of the price band in turn
-  (all of it about every 18 hours). That stays within eBay's 5,000 calls a day.
+  (all of it in about two days). That stays well within eBay's 5,000 calls a day.
 - Condition and grade come from the listing's condition fields on eBay, or its
   title when those are missing. Lots, proxies, customs, other card numbers,
   the other language, 1st Edition and reverse holo copies are skipped unless
