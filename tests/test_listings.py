@@ -58,6 +58,8 @@ LISTINGS = {
         item("c-lot", "Charizard ex 223/197 NM lot of 3", 150, 3, descriptors=RAW_NM),
         item("c-japanese", "Charizard ex 223/197 Japanese NM", 120, 3, descriptors=RAW_NM),
         item("c-wrong-number", "Charizard ex 199/197 NM", 110, 3, descriptors=RAW_NM),
+        item("c-reprint", "Charizard ex 223/197 30th Celebration Classic Collection NM", 90, 3,
+             descriptors=RAW_NM),
         item("c-listed-1", "Charizard ex 223/197 Obsidian Flames NM", 430, 30, descriptors=RAW_NM),
         item("c-listed-2", "Charizard ex 223/197 Near Mint", 445, 40, descriptors=RAW_NM),
     ],
@@ -106,11 +108,15 @@ class FakeEbay:
                         if key.lower() in qs["q"].lower():
                             return self._send({"itemSummaries": [s for s, _ in rows]})
                     return self._send({"itemSummaries": []})
-                if u.path == "/buy/browse/v1/item":
+                if u.path == "/buy/browse/v1/item":            # bulk getItems: needs approval
+                    return self._send({"errors": [{"message": "Insufficient permissions"}]}, 403)
+                if u.path.startswith("/buy/browse/v1/item/"):
                     site.item_calls += 1
-                    ids = qs["item_ids"].split(",")
+                    iid = u.path.rsplit("/", 1)[-1]
                     full = {f["itemId"]: f for rows in LISTINGS.values() for _, f in rows}
-                    return self._send({"items": [full[i] for i in ids if i in full]})
+                    if iid == "c-lp-fair":                         # one listing failing is not fatal
+                        return self._send({}, 500)
+                    return self._send(full[iid]) if iid in full else self._send({}, 404)
                 return self._send({}, 404)
         return H
 
@@ -187,7 +193,10 @@ class ListingScan(unittest.TestCase):
         self.assertIn("buyingOptions:{FIXED_PRICE}", q["filter"])
         self.assertEqual(q["category_ids"], "183454")
         self.assertEqual(self.site.tokens, 2)                 # one sign-in per run
-        self.assertEqual(self.result["calls"], 3)             # 2 searches + 1 batched item lookup
+        # 2 searches + one lookup per listing in the window that matched its card:
+        # c-deal, c-lp-fair (fails, skipped), l-psa10-deal, l-psa6, l-cgc10
+        self.assertEqual(self.result["calls"], 7)
+        self.assertIsNone(self.result["note"])
 
     def test_outputs_and_seen_state(self):
         with open(os.path.join(self.root, "LISTINGS.md"), encoding="utf-8") as fh:
@@ -222,6 +231,9 @@ class Matching(unittest.TestCase):
         self.assertFalse(ok("Charmander 113/112 PROXY card"))
         self.assertFalse(ok("Charmander 113/112 Reverse Holo"))
         self.assertFalse(ok("Charmander 113/112 1st Edition"))
+        self.assertFalse(listings.matches_card("Charmander 113/112 Celebrations reprint", self.CARD, ["celebrations"]))
+        own = dict(self.CARD, set="Celebrations: Classic Collection")
+        self.assertTrue(listings.matches_card("Charmander 113/112 Celebrations", own, ["celebrations"]))
         promo = {"name": "Pikachu", "number": "SWSH050", "lang": "English", "printing": "Holofoil"}
         self.assertTrue(ok("Pikachu SWSH050 promo", promo))
 

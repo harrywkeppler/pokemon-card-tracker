@@ -6,7 +6,7 @@ from the client-credentials grant; the default allowance is 5,000 Browse calls
 a day.
 
   search:    GET /buy/browse/v1/item_summary/search   (q, filter, sort, limit)
-  get_items: GET /buy/browse/v1/item?item_ids=...      (up to 20, with the
+  get_items: GET /buy/browse/v1/item/{item_id}         (one listing, with the
              trading-card condition descriptors: card condition, grader, grade)
 
 Fields used are from eBay's published spec (developer.ebay.com/develop/api/
@@ -91,12 +91,15 @@ class Client:
             params["filter"] = ",".join(filters)
         return self._get("/buy/browse/v1/item_summary/search", params).get("itemSummaries") or []
 
-    def get_items(self, item_ids: list[str]) -> dict:
-        """{itemId: item} for up to 20 ids per call (batched here)."""
+    def get_items(self, item_ids: list[str], limit: int = 80) -> dict:
+        """{itemId: item}, one getItem call per listing (the bulk getItems method
+        needs eBay's approval). A listing that fails is skipped, not fatal."""
         out = {}
-        for i in range(0, len(item_ids), 20):
-            chunk = item_ids[i:i + 20]
-            for it in self._get("/buy/browse/v1/item", {"item_ids": ",".join(chunk)}).get("items") or []:
-                if it.get("itemId"):
-                    out[it["itemId"]] = it
+        for iid in item_ids[:limit]:
+            try:
+                it = self._get(f"/buy/browse/v1/item/{urllib.parse.quote(iid, safe='')}", {})
+            except EbayError:
+                continue
+            if it.get("itemId"):
+                out[it["itemId"]] = it
         return out

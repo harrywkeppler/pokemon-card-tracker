@@ -115,7 +115,9 @@ def clean_name(name: str) -> str:
 
 def matches_card(title: str, card: dict, exclude: list[str]) -> bool:
     t = f" {title.lower()} "
-    if any(re.search(rf"\b{re.escape(w.lower())}\b", t) for w in exclude):
+    set_name = (card.get("set") or "").lower()
+    # a word that is part of the card's own set name ("Celebrations") is no reason to skip it
+    if any(re.search(rf"\b{re.escape(w.lower())}\b", t) and w.lower() not in set_name for w in exclude):
         return False
     words = re.findall(r"[a-z0-9']+", clean_name(card["name"]).lower())
     if words and words[0] not in t:
