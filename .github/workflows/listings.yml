@@ -2,9 +2,9 @@ name: Hourly listing scan
 
 on:
   schedule:
-    # every hour at :17. Needs the EBAY_CLIENT_ID and EBAY_CLIENT_SECRET secrets;
+    # every hour, on the hour. Needs the EBAY_CLIENT_ID and EBAY_CLIENT_SECRET secrets;
     # without them the run ends without changing anything.
-    - cron: "17 * * * *"
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 permissions:
