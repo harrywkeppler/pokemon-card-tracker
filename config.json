@@ -63,7 +63,9 @@
     "exclude_words": [
       "lot", "lots", "bundle", "proxy", "custom", "orica", "replica", "reprint", "fake",
       "digital", "code card", "online code", "empty", "art card", "metal", "gold plated",
-      "jumbo", "oversized", "sticker", "you pick", "choose", "mystery", "repack"
+      "jumbo", "oversized", "sticker", "you pick", "choose", "mystery", "repack",
+      "celebration", "celebrations", "classic collection", "anniversary", "30th", "25th",
+      "trading card game classic"
     ]
   },
   "excel_view": {
