@@ -152,6 +152,15 @@ class ListingScan(unittest.TestCase):
             "5002": {"grades": {"psa10": {"count": 4, "median": 2500.0, "market_7d": None},
                                 "psa9": {"count": 6, "median": 900.0, "market_7d": None}}},
         })
+        os.makedirs(os.path.join(cls.root, "docs"))
+        with open(os.path.join(cls.root, "docs", "latest.json"), "w", encoding="utf-8") as fh:
+            json.dump({"meta": {"date": "2026-11-10", "watch": 4, "filter_note": None}, "alerts": [
+                {"id": 5002, "n": "Lugia", "s": "Neo Genesis", "no": "9/111", "lang": "English", "p": 1000.0,
+                 "c7": 42.0, "sev": "high", "why": ["7-day move"], "new": True,
+                 "url": "https://www.tcgplayer.com/product/5002"},
+                {"id": 5001, "n": "Charizard ex", "s": "Obsidian Flames", "no": "223/197", "lang": "English",
+                 "p": 400.0, "c7": -18.0, "sev": "medium", "why": ["7-day move"], "new": False, "url": ""},
+            ]}, fh)
         os.environ["EBAY_CLIENT_ID"], os.environ["EBAY_CLIENT_SECRET"] = "test-id", "test-secret"
         try:
             cls.result = listings.run(cls.cfg, st, cls.root, now=NOW)
@@ -221,6 +230,28 @@ class ListingScan(unittest.TestCase):
                                          "3 listings, 1 new since the previous check  ·  3 cards searched")
         self.assertEqual(ws["A3"].value, "New")
         self.assertEqual(ws.tables["tblListings"].ref, "A3:R6")
+
+    def test_summary_sheet_first(self):
+        from openpyxl import load_workbook
+        wb = load_workbook(os.path.join(self.root, "out", "listings.xlsx"))
+        self.assertEqual(wb.sheetnames, ["Summary", "New listings"])
+        cells = [c.value for row in wb["Summary"].iter_rows() for c in row if c.value is not None]
+        text = "\n".join(str(v) for v in cells)
+        self.assertIn("3 listings priced well under comparable prices, 1 new since the previous check.", text)
+        self.assertIn("NEW · Charizard ex", text)                 # the new one is listed first
+        self.assertIn("Prices as of 2026-11-10: 2 high or medium alerts (1 new), 4 on the watch list.", text)
+        self.assertIn("Lugia", text)
+        self.assertIn("Not financial advice.", text)
+
+    def test_double_checks(self):
+        f = {"card": "Lugia", "set": "Aquapolis", "number": "149/147", "label": "Raw NM", "total": 150.0,
+             "vs": "TCGplayer market price (condition varies)", "gap_pct": 70.0,
+             "title": "Lugia 149/147 30th Celebration Classic Collection"}
+        text = listings.double_checks([f])[0]
+        for part in ("general market price", "unusually large", "reprint"):
+            self.assertIn(part, text)
+        ok = dict(f, vs="TCGplayer NM price", gap_pct=30.0, title="Lugia 149/147 Aquapolis")
+        self.assertEqual(listings.double_checks([ok]), [])
         self.assertFalse(self.find("c-deal", self.again)["new"])   # shown last hour already
 
     def test_without_keys_nothing_is_written(self):

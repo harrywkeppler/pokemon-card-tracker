@@ -369,7 +369,7 @@ def write_outputs(root: str, result: dict) -> None:
     # the workbook is uploaded, not committed: always rewrite it, so its
     # "Last updated" line shows the latest check even after a quiet hour
     try:
-        _workbook(os.path.join(root, "out", "listings.xlsx"), result)
+        _workbook(os.path.join(root, "out", "listings.xlsx"), result, _daily_alerts(root))
     except ImportError:
         pass
     try:   # an empty hour after an empty hour changes nothing: keep the files, skip a commit
@@ -406,7 +406,137 @@ def write_outputs(root: str, result: dict) -> None:
         f.write("\n".join(L))
 
 
-def _workbook(path: str, result: dict) -> None:
+def _daily_alerts(root: str):
+    """docs/latest.json from the daily run, or None."""
+    try:
+        with open(os.path.join(root, "docs", "latest.json"), encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+WEAK_COMPARISON = "condition varies"
+SUSPECT_WORDS = re.compile(r"celebration|classic collection|anniversary|reprint|proxy|custom|orica", re.I)
+
+
+def double_checks(finds: list[dict]) -> list[str]:
+    """Plain-English reasons to look closely before trusting a find."""
+    out = []
+    for x in finds:
+        why = []
+        if WEAK_COMPARISON in x["vs"]:
+            why.append("compared only with TCGplayer's general market price, which may not be this condition")
+        m = re.search(r"eBay listings median \((\d+)\)", x["vs"])
+        if m and int(m.group(1)) < 5:
+            why.append(f"compared with only {m.group(1)} other listings")
+        if x["gap_pct"] >= 60:
+            why.append(f"{x['gap_pct']:.0f}% under is unusually large")
+        if SUSPECT_WORDS.search(x["title"]):
+            why.append("title mentions a reprint or custom")
+        if why:
+            out.append(f"{x['card']} ({x['set']} {x['number']}), {x['label']} at ${x['total']:,.2f}: "
+                       + "; ".join(why) + ". Check the photos and set symbol.")
+    return out
+
+
+def _summary_sheet(wb, result: dict, daily) -> None:
+    """A one-page overview placed first: new eBay deals, top deals, top daily alerts."""
+    from openpyxl.styles import Alignment, Font, PatternFill
+    BASE, BOLD = Font(name="Arial", size=10), Font(name="Arial", size=10, bold=True)
+    HEAD = Font(name="Arial", size=10, bold=True, color="FFFFFF")
+    FILL = PatternFill("solid", fgColor="1F3A5F")
+    LINK = Font(name="Arial", size=10, color="0563C1", underline="single")
+    MUTED = Font(name="Arial", size=10, color="666666")
+    ws = wb.create_sheet("Summary", 0)
+    for col, w in zip("ABCDEFGH", (34, 26, 14, 12, 12, 34, 12, 10)):
+        ws.column_dimensions[col].width = w
+    row = 1
+
+    def line(text, font=BASE):
+        nonlocal row
+        c = ws.cell(row=row, column=1, value=text)
+        c.font = font
+        row += 1
+
+    def header(cols):
+        nonlocal row
+        for j, h in enumerate(cols, start=1):
+            c = ws.cell(row=row, column=j, value=h)
+            c.font, c.fill = HEAD, FILL
+        row += 1
+
+    def put(values, formats=None):
+        nonlocal row
+        for j, v in enumerate(values, start=1):
+            c = ws.cell(row=row, column=j, value=v)
+            c.font = BASE
+            if formats and formats.get(j):
+                c.number_format = formats[j]
+            if isinstance(v, str) and v.startswith("http"):
+                c.hyperlink, c.value, c.font = v, "Open", LINK
+        row += 1
+
+    finds = result["finds"]
+    new = [x for x in finds if x.get("new")]
+    line("Pokémon tracker summary", Font(name="Arial", size=14, bold=True))
+    line(f"Last updated: {result.get('generated_local') or result['generated']}", MUTED)
+    row += 1
+    line("eBay deals", Font(name="Arial", size=12, bold=True))
+    line(f"{len(finds)} listings priced well under comparable prices, {len(new)} new since the previous "
+         f"check. {result['scanned']} cards searched.")
+    if result.get("note"):
+        line(f"Problem with this scan: {result['note']}", Font(name="Arial", size=10, color="C00000"))
+    top = sorted(finds, key=lambda x: (not x.get("new"), -x["gap_pct"]))[:5]
+    if top:
+        header(["Card", "Set · number", "Condition", "Total", "Under by", "Compared with", "Listed", "eBay"])
+        for x in top:
+            put([("NEW · " if x.get("new") else "") + x["card"], f"{x['set']} · {x['number']}", x["label"],
+                 x["total"], x["gap_pct"] / 100.0, x["vs"], f"{x['listed_hours_ago']:.0f} h ago", x["url"]],
+                {4: "$#,##0.00", 5: "0%"})
+        line("All listings are on the New listings sheet.", MUTED)
+    else:
+        line("No deals right now.", MUTED)
+    row += 1
+
+    line("Daily price alerts", Font(name="Arial", size=12, bold=True))
+    if daily and daily.get("meta"):
+        m = daily["meta"]
+        alerts = daily.get("alerts") or []
+        main = [a for a in alerts if a.get("sev") in ("high", "medium")]
+        line(f"Prices as of {m.get('date')}: {len(main)} high or medium alerts "
+             f"({sum(1 for a in main if a.get('new'))} new), {m.get('watch', 0)} on the watch list.")
+        if m.get("filter_note"):
+            line(m["filter_note"], MUTED)
+        high = [a for a in alerts if a.get("sev") == "high"][:5]
+        if high:
+            header(["Card", "Set · number", "Language", "Price", "7-day change", "Why", "New", "TCGplayer"])
+            for a in high:
+                c7 = a.get("c7")
+                put([a.get("n", ""), f"{a.get('s', '')} · {a.get('no', '')}", a.get("lang", ""), a.get("p"),
+                     None if c7 is None else c7 / 100.0, ", ".join(a.get("why") or []),
+                     "Yes" if a.get("new") else "", a.get("url") or None],
+                    {4: "$#,##0.00", 5: "+0.0%;-0.0%"})
+        else:
+            line("No high alerts today.", MUTED)
+        line("Everything else is in tracker.xlsx (same download link).", MUTED)
+    else:
+        line("The daily alerts file isn't available yet.", MUTED)
+    row += 1
+
+    checks = double_checks(finds)
+    line("Worth double-checking", Font(name="Arial", size=12, bold=True))
+    for text in checks or ["Nothing stands out."]:
+        c = ws.cell(row=row, column=1, value=text)
+        c.font = BASE
+        c.alignment = Alignment(wrap_text=True, vertical="top")
+        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=8)
+        ws.row_dimensions[row].height = 28
+        row += 1
+    row += 1
+    line("Not financial advice.", MUTED)
+
+
+def _workbook(path: str, result: dict, daily=None) -> None:
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill
     from openpyxl.utils import get_column_letter
@@ -454,5 +584,7 @@ def _workbook(path: str, result: dict) -> None:
     tab = Table(displayName="tblListings", ref=f"A3:{get_column_letter(len(cols))}{ws.max_row}")
     tab.tableStyleInfo = TableStyleInfo(name="TableStyleLight9", showRowStripes=True)
     ws.add_table(tab)
+    _summary_sheet(wb, result, daily)
+    wb.active = 0
     os.makedirs(os.path.dirname(path), exist_ok=True)
     wb.save(path)
