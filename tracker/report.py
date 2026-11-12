@@ -65,7 +65,8 @@ def graded_text(gr: list) -> str:
 
 
 def condition_text(cond: list) -> str:
-    """'NM $410 (12) · LP $340 (3)': latest price, sales in the last 30 days"""
+    """'NM $410 (12) · LP $340 (3)': latest price, sales in the history returned
+    (3 days on the free plan)"""
     return " · ".join(f"{label} {'–' if p is None else f'${p:,.0f}'} ({n})" for label, p, n in cond)
 
 

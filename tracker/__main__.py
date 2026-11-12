@@ -172,7 +172,9 @@ def analyse(cfg: dict, store: Store, root: str) -> dict:
         if key:
             before = len(result["alerts"])
             result["alerts"] = ppt.apply_condition_filter(result["alerts"], ccfg)
-            notes.append(f"Only cards sold in {names} in the last 30 days: "
+            days = ppt.history_days(ebay) or 30
+            window = f"{days} days" + (" (the free plan's price history)" if days <= 3 else "")
+            notes.append(f"Only cards sold in {names} in the last {window}: "
                          f"{len(result['alerts'])} of {before} kept.")
         else:
             missing.append("condition")

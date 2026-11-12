@@ -90,8 +90,22 @@ class Conditions(unittest.TestCase):
             "Near Mint": [("2026-11-10", 410.0, 2), ("2026-11-08", 400.0, None), ("2026-11-09", 405.0, 1)],
             "Damaged": [("2026-11-09", None, None)],               # nothing to show
         }}, used={"Holofoil": "Near Mint"}))
-        self.assertEqual(got, {"Holofoil": {"used": "Near Mint",
+        self.assertEqual(got, {"Holofoil": {"used": "Near Mint", "days": 3,
                                             "by": {"Near Mint": {"price": 410.0, "sales_30d": 3.0}}}})
+
+    def test_live_reply_shape(self):
+        # as the API sends it: daily points carry `market`, each condition a `latestPrice`
+        reply = {"priceHistory": {"variants": {"Reverse Holofoil": {
+            "Lightly Played": {"history": [{"date": "2026-11-10T00:00:00.000Z", "market": 316.99, "volume": 1},
+                                           {"date": "2026-11-11T00:00:00.000Z", "market": 316.99, "volume": 1},
+                                           {"date": "2026-11-12T00:00:00.000Z", "market": 316.99, "volume": None}],
+                               "dataPoints": 3, "latestPrice": 316.99},
+            "Near Mint": {"history": [{"date": "2026-11-12T00:00:00.000Z", "market": 300, "volume": None}],
+                          "latestPrice": None}}}}}
+        got = ppt._dig_conditions(reply)["Reverse Holofoil"]
+        self.assertEqual(got["by"]["Lightly Played"], {"price": 316.99, "sales_30d": 2.0})
+        self.assertEqual(got["by"]["Near Mint"]["price"], 300)      # falls back to the last `market`
+        self.assertEqual(ppt.history_days({"1": {"conditions": {"Reverse Holofoil": got}}}), 3)
 
     def test_odd_replies(self):
         self.assertEqual(ppt._dig_conditions({}), {})

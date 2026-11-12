@@ -137,32 +137,44 @@ CONDITION_ABBR = dict(CONDITIONS)
 
 
 def _dig_conditions(card: dict) -> dict:
-    """{printing: {"used": condition the market price is for, or None,
+    """{printing: {"used": condition the market price is for, or None, "days": days of history,
                    "by": {condition: {"price": latest price, "sales_30d": copies sold}}}}
 
-    From priceHistory.variants[printing][condition].history (one point per day,
-    `price` and `volume`) and prices.variants[printing].conditionUsed."""
+    From priceHistory.variants[printing][condition]: `latestPrice`, and `history`
+    (one point per day with `market` and `volume`), plus
+    prices.variants[printing].conditionUsed. "sales_30d" counts the sales in
+    whatever history the plan returns: 3 days on the free plan, more on paid
+    ones; "days" says how many."""
     out: dict = {}
     hist = ((card.get("priceHistory") or {}).get("variants")) or {}
     for printing, conds in hist.items():
         if not isinstance(conds, dict):
             continue
-        by = {}
+        by, days = {}, 0
         for cond, body in conds.items():
             points = body.get("history") if isinstance(body, dict) else None
             points = sorted((p for p in points or [] if isinstance(p, dict) and p.get("date")),
                             key=lambda p: str(p["date"]))
-            price = next((p["price"] for p in reversed(points)
-                          if isinstance(p.get("price"), (int, float))), None)
+            latest = body.get("latestPrice") if isinstance(body, dict) else None
+            price = latest if isinstance(latest, (int, float)) else next(
+                (p.get("market", p.get("price")) for p in reversed(points)
+                 if isinstance(p.get("market", p.get("price")), (int, float))), None)
             sales = sum(float(p.get("volume") or 0) for p in points)
+            days = max(days, len({str(p["date"])[:10] for p in points}))
             if price is not None or sales:
                 by[str(cond)] = {"price": price, "sales_30d": sales}
         if by:
-            out[str(printing)] = {"used": None, "by": by}
+            out[str(printing)] = {"used": None, "days": days, "by": by}
     for printing, body in (((card.get("prices") or {}).get("variants")) or {}).items():
         if isinstance(body, dict) and isinstance(body.get("conditionUsed"), str):
-            out.setdefault(str(printing), {"used": None, "by": {}})["used"] = body["conditionUsed"]
+            out.setdefault(str(printing), {"used": None, "days": 0, "by": {}})["used"] = body["conditionUsed"]
     return out
+
+
+def history_days(ebay: dict) -> int:
+    """Days of condition history the lookups returned (the plan's window), 0 if none."""
+    return max((v.get("days") or 0 for e in ebay.values() if isinstance(e, dict)
+                for v in (e.get("conditions") or {}).values() if isinstance(v, dict)), default=0)
 
 
 def conditions_for(entry: dict | None, printing: str):
