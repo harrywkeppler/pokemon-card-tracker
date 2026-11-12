@@ -83,7 +83,7 @@
     "sort_by": "Biggest move"
   },
   "volume_api": {
-    "daily_credits": 100,
+    "daily_credits": 50,
     "credits_per_card": 3,
     "recent_alert_days": 14
   },
