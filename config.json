@@ -36,7 +36,7 @@
     "min_sales": 1
   },
   "condition_filter": {
-    "enabled": true,
+    "enabled": false,
     "conditions": [
       "Near Mint",
       "Lightly Played"
