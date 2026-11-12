@@ -490,7 +490,7 @@ class GradedEndToEnd(unittest.TestCase):
     def test_note_in_outputs(self):
         note = self.payload["meta"]["filter_note"]
         self.assertTrue(note.startswith("Only cards with PSA 7–10 sales: 2 of "), note)
-        self.assertIn("Only cards sold in Near Mint or Lightly Played in the last 30 days: 1 of 2 kept.", note)
+        self.assertIn("Only cards sold in Near Mint or Lightly Played in the last 3 days (the free plan's price history): 1 of 2 kept.", note)
         with open(os.path.join(self.repo, "REPORT.md"), encoding="utf-8") as f:
             md = f.read()
         self.assertIn(note, md)
